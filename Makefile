@@ -1,7 +1,7 @@
 all: sim
 
-sim: shell.c sim.c
-	gcc -g -O2 -DDEBUG_FLAG $^ -o $@
+sim: shell.cpp sim.cpp
+	g++ -g -O2 -DDEBUG_FLAG $^ -o $@
 
 .PHONY: clean
 clean:
