@@ -1,5 +1,6 @@
 #include "design.h"
 #include "SDL2/SDL.h"
+#include <iostream>
 
 void drawDottedLine(SDL_Renderer* renderer, SDL_Window* window, int gap, int height, int dotSpacing, int lineLength, int lineWidth) {
     // Get window dimensions
@@ -48,6 +49,95 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer) {
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // Green
     SDL_RenderFillRect(renderer, &aluRect);
 
+    // Draw DECODE
+    SDL_Rect decodeRect = {315, 358, 150, 60};
+    SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255); // Blue
+    SDL_RenderFillRect(renderer, &decodeRect);
+
+
+    // Draw Registerfile
+    SDL_Rect registerfileRect = {316, 484, 150, 76};
+    SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255); // Blue
+    SDL_RenderFillRect(renderer, &registerfileRect);
+
+
+    // Draw IR
+    SDL_Rect irRect = {93, 176, 150, 44};
+    SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255); // Blue
+    SDL_RenderFillRect(renderer, &irRect);
+
+
+
+
+    // Draw PC left
+     const std::vector< SDL_Vertex > left_pc =
+    {
+        { SDL_FPoint{ 45, 291 }, SDL_Color{ 0, 255, 0, 255 }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 35, 325 }, SDL_Color{ 0, 255, 0, 255 }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 53, 325 }, SDL_Color{ 0, 255, 0, 255 }, SDL_FPoint{ 0 }, },
+    };
+    SDL_RenderGeometry( renderer, nullptr, left_pc.data(), left_pc.size(), nullptr, 0 );
+    // Draw pc mux
+    SDL_Rect pcRect = {45, 290, 153, 35};
+    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // Blue
+    SDL_RenderFillRect(renderer, &pcRect);    
+    // Draw PC mux right
+     const std::vector< SDL_Vertex > right_pc =
+    {
+        { SDL_FPoint{ 200, 290 }, SDL_Color{ 0, 255, 0, 255 }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 180, 325 }, SDL_Color{ 0, 255, 0, 255 }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 210, 325 }, SDL_Color{ 0, 255, 0, 255 }, SDL_FPoint{ 0 }, },
+    };
+    SDL_RenderGeometry( renderer, nullptr, right_pc.data(), right_pc.size(), nullptr, 0 );
+
+
+
+
+
+    // Draw mux execute top
+     const std::vector< SDL_Vertex > left_mux_execute =
+    {
+        { SDL_FPoint{ 560, 340 }, SDL_Color{ 0, 255, 0, 255 }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 560, 360 }, SDL_Color{ 0, 255, 0, 255 }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 590, 360 }, SDL_Color{ 0, 255, 0, 255 }, SDL_FPoint{ 0 }, },
+    };
+    SDL_RenderGeometry( renderer, nullptr, left_mux_execute.data(), left_mux_execute.size(), nullptr, 0 );
+     // Draw execute mux
+    SDL_Rect executeRect = {560, 360, 27, 83};
+    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // Blue
+    SDL_RenderFillRect(renderer, &executeRect);    
+    // Draw mux execute down
+     const std::vector< SDL_Vertex > right_mux_execute =
+    {
+        { SDL_FPoint{ 560, 440 }, SDL_Color{ 0, 255, 0, 255 }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 590, 440 }, SDL_Color{ 0, 255, 0, 255 }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 560, 460 }, SDL_Color{ 0, 255, 0, 255 }, SDL_FPoint{ 0 }, },
+    };
+    SDL_RenderGeometry( renderer, nullptr, right_mux_execute.data(), right_mux_execute.size(), nullptr, 0 );
+
+
+
+
+    // Draw mux execute top
+     const std::vector< SDL_Vertex > left_mux_decode =
+    {
+        { SDL_FPoint{ 485, 625 }, SDL_Color{ 0, 255, 0, 255 }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 450, 650 }, SDL_Color{ 0, 255, 0, 255 }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 485, 650 }, SDL_Color{ 0, 255, 0, 255 }, SDL_FPoint{ 0 }, },
+    };
+    SDL_RenderGeometry( renderer, nullptr, left_mux_decode.data(), left_mux_decode.size(), nullptr, 0 );
+     // Draw execute mux
+    SDL_Rect decodeMuxRect = {450, 648, 35, 40};
+    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // Blue
+    SDL_RenderFillRect(renderer, &decodeMuxRect);    
+    // Draw mux execute down
+     const std::vector< SDL_Vertex > right_mux_decode =
+    {
+        { SDL_FPoint{ 450, 690 }, SDL_Color{ 0, 255, 0, 255 }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 485, 650 }, SDL_Color{ 0, 255, 0, 255 }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 485, 710 }, SDL_Color{ 0, 255, 0, 255 }, SDL_FPoint{ 0 }, },
+    };
+    SDL_RenderGeometry( renderer, nullptr, right_mux_decode.data(), right_mux_decode.size(), nullptr, 0 );
 
     // Draw Registers
     // SDL_Rect registerRect = {50, 200, 50, 200};
