@@ -30,6 +30,8 @@ SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
 TTF_Font* font = nullptr;
 bool done = false;
+int oldMouseX = 0;
+int oldMouseY = 0;
 
 // Our state
 bool show_demo_window = true;
@@ -59,7 +61,10 @@ void handleButtonClick(SDL_Event& e) {
     int mouseX, mouseY;
     SDL_GetMouseState(&mouseX, &mouseY);
 
-    std::cout << "X: " << mouseX << ", Y: " << mouseY << std::endl;
+    std::cout << "X: " << mouseX << ", Y: " << mouseY << " | diff X: " << oldMouseX - mouseX << ", Y: " << oldMouseY - mouseY << std::endl;
+
+    oldMouseX = mouseX;
+    oldMouseY = mouseY;
 
     // Check if the mouse click is within the button area
     if (mouseX >= 600 && mouseX <= 750 && mouseY >= 500 && mouseY <= 550) {
