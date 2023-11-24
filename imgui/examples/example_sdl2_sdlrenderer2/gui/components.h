@@ -1,16 +1,19 @@
 #include "SDL2/SDL.h"
 
-#define SDL_renderer r_
+void draw_fetch_mux(SDL_renderer renderer, SDL_color color);
 
-void draw_fetch_mux(r_ renderer);
+void draw_fetch_pc(SDL_renderer renderer, SDL_color color);
 
-void draw_fetch_pc(r_ renderer);
+void draw_decode_decoder(SDL_renderer renderer, SDL_color color);
 
-void draw_decode_decoder(r_ renderer);
+void draw_decode_registeSDL_rendererfiles(SDL_renderer renderer, SDL_color color);
 
-void draw_decode_register_files(r_ renderer);
+void draw_decode_mux_to_alu(SDL_renderer renderer, SDL_color color);
 
-void draw_execute_alu(r_ renderer);
+void draw_decode_mux_to_fetch(SDL_renderer renderer, SDL_color color);
 
-void draw_memory_main_memory(r_ renderer);
+void draw_execute_alu(SDL_renderer renderer, SDL_color color);
 
+void draw_memory_main_memory(SDL_renderer renderer, SDL_color color);
+
+void draw_line_pc_to_main_memory(SDL_renderer renderer, SDL_color color);
