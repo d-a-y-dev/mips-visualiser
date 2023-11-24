@@ -496,9 +496,9 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer) {
 
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderDrawLine(renderer,660,328,660,328);
-    SDL_RenderDrawLine(renderer,661,328,661,328);
-    SDL_RenderDrawLine(renderer,662,328,662,328);
+    SDL_RenderDrawLine(renderer,660,330,660,212);
+    SDL_RenderDrawLine(renderer,661,330,661,212);
+    SDL_RenderDrawLine(renderer,662,330,662,212);
 
 
     const std::vector< SDL_Vertex > AluToMemoryData =
@@ -589,11 +589,53 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer) {
     SDL_RenderGeometry( renderer, nullptr, memoryToDecodeMuxData.data(), memoryToDecodeMuxData.size(), nullptr, 0 );
 
 
-
+    // FETCH
     renderText("Next", 40, 236, textColor);
     renderText("PC", 50, 263, textColor);
 
     renderText("PC + 4", 15, 412, textColor);
+
+    renderText("Data", 85, 681, textColor);
+
+    renderText("Reg.", 145, 525, textColor);
+    renderText("Data", 145, 565, textColor);
+    
+    renderText("Sel", 196, 440, textColor);
+
+    renderText("Imm", 197, 348, textColor);
+
+    renderText("Sel", 243, 264, textColor);
+
+
+    // Decode
+    renderText("Sel", 322, 434, textColor);
+
+    renderText("Operands", 405, 447, textColor);
+
+    renderText("Imm", 479, 343, textColor);
+
+    renderText("Sel", 479, 273, textColor);
+
+    renderText("Instruction", 441, 150, textColor);
+
+    renderText("Address", 401, 68, textColor);
+
+    //Execute
+    renderText("Data", 621, 247, textColor);
+
+    renderText("Address", 692, 265, textColor);
+
+    renderText("ALU", 645, 589, textColor);
+
+    //Memory
+    renderText("Main Memory", 832, 277, textColor);
+
+    renderText("Data", 885, 389, textColor);
+
+    //Writeback
+    renderText("Data", 1036, 198, textColor);
+
+
 
     // Draw Registers
     // SDL_Rect registerRect = {50, 200, 50, 200};
