@@ -453,7 +453,7 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer) {
 
 
 
-    // MuxNearAlu to decodeMux
+    // decode to decodeMux
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderDrawLine(renderer,485,647,534,647);
     SDL_RenderDrawLine(renderer,485,648,534,648);
@@ -563,7 +563,7 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer) {
     SDL_RenderGeometry( renderer, nullptr, memoryToDecodeMux.data(), memoryToDecodeMux.size(), nullptr, 0 );
 
 
-    // memory to decodeMux Data
+    // alu to decodeMux Data
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderDrawLine(renderer,768,422,1098,422);
     SDL_RenderDrawLine(renderer,768,423,1098,423);
@@ -580,13 +580,13 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer) {
     SDL_RenderDrawLine(renderer,486,670,1097,670);
 
 
-    const std::vector< SDL_Vertex > memoryToDecodeMuxData =
+    const std::vector< SDL_Vertex > aluToDecodeMuxData =
     {
         { SDL_FPoint{ 502, 662 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
         { SDL_FPoint{ 486, 668 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
         { SDL_FPoint{ 502, 676 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
     };
-    SDL_RenderGeometry( renderer, nullptr, memoryToDecodeMuxData.data(), memoryToDecodeMuxData.size(), nullptr, 0 );
+    SDL_RenderGeometry( renderer, nullptr, aluToDecodeMuxData.data(), aluToDecodeMuxData.size(), nullptr, 0 );
 
 
     // FETCH

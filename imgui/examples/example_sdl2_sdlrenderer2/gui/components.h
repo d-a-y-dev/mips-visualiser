@@ -6,11 +6,11 @@ void draw_fetch_pc(SDL_Renderer* renderer, SDL_Color color);
 
 void draw_decode_decoder(SDL_Renderer* renderer, SDL_Color color);
 
-void draw_decode_register_files(SDL_renderer* renderer, SDL_Color color);
+void draw_decode_register_files(SDL_Renderer* renderer, SDL_Color color);
 
-void draw_decode_mux_to_alu(SDL_renderer* renderer, SDL_Color color);
+void draw_decode_mux_to_alu(SDL_Renderer* renderer, SDL_Color color);
 
-void draw_decode_mux_to_fetch(SDL_renderer* renderer, SDL_Color color);
+void draw_decode_mux_to_fetch(SDL_Renderer* renderer, SDL_Color color);
 
 void draw_execute_alu(SDL_Renderer* renderer, SDL_Color color);
 
