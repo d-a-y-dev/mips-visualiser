@@ -117,7 +117,7 @@ void draw_memory_main_memory(SDL_Renderer* renderer, SDL_Color color)
     return;
 }
 
-void draw_line_pc_to_main_memory(SDL_Renderer* renderer, SDL_Color color) 
+void draw_line_pc_to_main_memory(SDL_Renderer* renderer, SDL_Color color)
 {
     // Draw line form PC to memory
     // Strat form PC
@@ -247,7 +247,7 @@ void draw_line_decoder_to_mux_to_alu_imm(SDL_Renderer* renderer, SDL_Color color
     const std::vector< SDL_Vertex > decodeTodecodeMuxNearAluImmArrow =
     {
         { SDL_FPoint{ 546, 372 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
-        
+
         { SDL_FPoint{ 547, 388 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
         { SDL_FPoint{ 561, 380 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
     };
@@ -340,19 +340,19 @@ void draw_line_register_files_to_mux_to_alu(SDL_Renderer* renderer, SDL_Color co
 
 void draw_line_decode_mux_to_alu(SDL_Renderer* renderer, SDL_Color color)
 {
-    // Draw line form decodeMux to registerfile
-    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a); // Black
-    SDL_RenderDrawLine(renderer, 386, 669, 386, 566);
-    SDL_RenderDrawLine(renderer, 387, 669, 387, 566);
-    SDL_RenderDrawLine(renderer, 388, 669, 388, 566);
+    // MuxNearAlu to Alu
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+    SDL_RenderDrawLine(renderer,588,402,614,403);
+    SDL_RenderDrawLine(renderer,588,403,614,404);
+    SDL_RenderDrawLine(renderer,588,404,614,405);
 
-    const std::vector< SDL_Vertex > decodeToRegisterFileArrow =
+    const std::vector< SDL_Vertex > muxNearAluToAlu =
     {
-        { SDL_FPoint{ 389, 563 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
-        { SDL_FPoint{ 380, 575 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
-        { SDL_FPoint{ 394, 575 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 601, 397 }, color , SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 614, 401 }, color, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 601, 407 }, color, SDL_FPoint{ 0 }, },
     };
-    SDL_RenderGeometry( renderer, nullptr, decodeToRegisterFileArrow.data(), decodeToRegisterFileArrow.size(), nullptr, 0 );
+    SDL_RenderGeometry( renderer, nullptr, muxNearAluToAlu.data(), muxNearAluToAlu.size(), nullptr, 0 );
     return;
 }
 
@@ -569,7 +569,7 @@ void draw_line_decoder_to_register_file(SDL_Renderer* renderer, SDL_Color color)
     const std::vector< SDL_Vertex > decideToRegisterFile =
     {
         { SDL_FPoint{ 380, 468 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
-        
+
         { SDL_FPoint{ 399, 467 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
         { SDL_FPoint{ 390, 486 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
     };
@@ -602,7 +602,7 @@ void draw_line_decoder_to_mux_to_pc(SDL_Renderer* renderer, SDL_Color color)
     SDL_RenderDrawLine(renderer, 467, 592, 467, 628);
     SDL_RenderDrawLine(renderer, 468, 592, 468, 628);
     SDL_RenderDrawLine(renderer, 469, 592, 469, 628);
-   
+
     const std::vector< SDL_Vertex > decodeToDecodeMuxArrow =
     {
         { SDL_FPoint{ 459, 616 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },

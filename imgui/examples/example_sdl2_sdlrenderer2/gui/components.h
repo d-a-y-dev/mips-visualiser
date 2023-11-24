@@ -51,3 +51,7 @@ void draw_line_alu_to_mux_to_pc(SDL_Renderer* renderer, SDL_Color color);
 void draw_line_main_memory_to_mux_to_pc(SDL_Renderer* renderer, SDL_Color color);
 
 void draw_line_mux_to_mux(SDL_Renderer* renderer, SDL_Color color);
+
+void draw_line_decoder_to_register_file(SDL_Renderer* renderer, SDL_Color color);
+
+void draw_line_decoder_to_mux_to_pc(SDL_Renderer* renderer, SDL_Color color);
