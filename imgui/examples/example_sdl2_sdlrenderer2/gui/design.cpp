@@ -126,11 +126,11 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer) {
         { SDL_FPoint{ 485, 650 }, SDL_Color{ 0, 255, 0, 255 }, SDL_FPoint{ 0 }, },
     };
     SDL_RenderGeometry( renderer, nullptr, left_mux_decode.data(), left_mux_decode.size(), nullptr, 0 );
-     // Draw execute mux
+     // Draw decode mux
     SDL_Rect decodeMuxRect = {450, 648, 35, 40};
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // Blue
     SDL_RenderFillRect(renderer, &decodeMuxRect);    
-    // Draw mux execute down
+    // Draw mux decode down
      const std::vector< SDL_Vertex > right_mux_decode =
     {
         { SDL_FPoint{ 450, 690 }, SDL_Color{ 0, 255, 0, 255 }, SDL_FPoint{ 0 }, },
@@ -138,6 +138,243 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer) {
         { SDL_FPoint{ 485, 710 }, SDL_Color{ 0, 255, 0, 255 }, SDL_FPoint{ 0 }, },
     };
     SDL_RenderGeometry( renderer, nullptr, right_mux_decode.data(), right_mux_decode.size(), nullptr, 0 );
+
+
+    // Draw line form IR to memory
+    // Strat form IR
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black
+    SDL_RenderDrawLine(renderer, 170, 176, 170, 100);
+    SDL_RenderDrawLine(renderer, 169, 176, 169, 100);
+    SDL_RenderDrawLine(renderer, 168, 176, 168, 100);
+    
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black
+    SDL_RenderDrawLine(renderer, 170, 99, 840, 104);
+    SDL_RenderDrawLine(renderer, 170, 100, 840, 105);
+    SDL_RenderDrawLine(renderer, 170, 101, 840, 106);
+   
+    
+    const std::vector< SDL_Vertex > irArrow =
+    {
+        { SDL_FPoint{ 825, 98 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 840, 105 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 825, 112 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
+    };
+    SDL_RenderGeometry( renderer, nullptr, irArrow.data(), irArrow.size(), nullptr, 0 );
+
+
+    // Draw line form Pc mux to IR
+
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black
+    SDL_RenderDrawLine(renderer, 133, 288, 133, 225);
+    SDL_RenderDrawLine(renderer, 132, 288, 132, 225);
+    SDL_RenderDrawLine(renderer, 131, 288, 131, 225);
+
+    const std::vector< SDL_Vertex > pcToIRArrow =
+    {
+        { SDL_FPoint{ 134, 226 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 124, 239 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 142, 235 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
+    };
+    SDL_RenderGeometry( renderer, nullptr, pcToIRArrow.data(), pcToIRArrow.size(), nullptr, 0 );
+
+
+    // Draw line form Pc+4 to PC mux
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black
+    SDL_RenderDrawLine(renderer, 66, 388, 67, 330);
+    SDL_RenderDrawLine(renderer, 65, 388, 66, 330);
+    SDL_RenderDrawLine(renderer, 64, 388, 65, 330);
+
+    const std::vector< SDL_Vertex > pcPlus4Arrow =
+    {
+        { SDL_FPoint{ 65, 327 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 73, 338 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 58, 338 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
+    };
+    SDL_RenderGeometry( renderer, nullptr, pcPlus4Arrow.data(), pcPlus4Arrow.size(), nullptr, 0 );
+    
+
+
+    // Draw line form mux decode to Pc mux
+
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black
+    SDL_RenderDrawLine(renderer, 99, 329, 99, 666);
+    SDL_RenderDrawLine(renderer, 100, 329, 100, 666);
+    SDL_RenderDrawLine(renderer, 101, 329, 101, 666);
+    
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black
+    SDL_RenderDrawLine(renderer, 100, 664, 449, 667);
+    SDL_RenderDrawLine(renderer, 100, 665, 449, 668);
+    SDL_RenderDrawLine(renderer, 100, 666, 449, 669);
+   
+    const std::vector< SDL_Vertex > deocdeMuxArrow =
+    {
+        { SDL_FPoint{ 101, 326 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 93, 341 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 107, 339 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
+    };
+    SDL_RenderGeometry( renderer, nullptr, deocdeMuxArrow.data(), deocdeMuxArrow.size(), nullptr, 0 );
+
+
+
+    // Draw line form registerfile to Pc mux
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black
+    SDL_RenderDrawLine(renderer, 141, 327, 141, 503);
+    SDL_RenderDrawLine(renderer, 142, 327, 142, 503);
+    SDL_RenderDrawLine(renderer, 143, 327, 143, 503);
+
+    
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black
+    SDL_RenderDrawLine(renderer, 142, 502, 315, 502);
+    SDL_RenderDrawLine(renderer, 142, 503, 315, 503);
+    SDL_RenderDrawLine(renderer, 142, 504, 315, 504);
+
+    
+    const std::vector< SDL_Vertex > registerToPCMuxArrow =
+    {
+        { SDL_FPoint{ 140, 326 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 133, 339 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 149, 339 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
+    };
+    SDL_RenderGeometry( renderer, nullptr, registerToPCMuxArrow.data(), registerToPCMuxArrow.size(), nullptr, 0 );
+
+
+
+
+    // Draw line form decode to Pc mux (Imm)
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black
+    SDL_RenderDrawLine(renderer, 178, 328, 178, 378);
+    SDL_RenderDrawLine(renderer, 179, 328, 179, 378);
+    SDL_RenderDrawLine(renderer, 180, 328, 180, 378);
+    
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black
+    SDL_RenderDrawLine(renderer, 179, 379, 316, 379);
+    SDL_RenderDrawLine(renderer, 179, 380, 316, 380);
+    SDL_RenderDrawLine(renderer, 179, 381, 316, 381);
+
+    const std::vector< SDL_Vertex > decodeToPCMuxImmArrow =
+    {
+        { SDL_FPoint{ 179, 328 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 170, 340 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 186, 339 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
+    };
+    SDL_RenderGeometry( renderer, nullptr, decodeToPCMuxImmArrow.data(), decodeToPCMuxImmArrow.size(), nullptr, 0 );
+
+
+
+
+    // Draw line form decode to Pc mux (Sel)
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black
+    SDL_RenderDrawLine(renderer, 205, 305, 342, 305);
+    SDL_RenderDrawLine(renderer, 205, 306, 342, 306);
+    SDL_RenderDrawLine(renderer, 205, 307, 342, 307);
+   
+    
+    
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black
+    SDL_RenderDrawLine(renderer, 341, 305, 341, 355);
+    SDL_RenderDrawLine(renderer, 342, 305, 342, 355);
+    SDL_RenderDrawLine(renderer, 343, 305, 343, 355);
+    
+
+    const std::vector< SDL_Vertex > decodeToPCMuxSelArrow =
+    {
+        { SDL_FPoint{ 221, 300 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 207, 307 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 220, 314 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
+    };
+    SDL_RenderGeometry( renderer, nullptr, decodeToPCMuxSelArrow.data(), decodeToPCMuxSelArrow.size(), nullptr, 0 );
+
+
+
+
+    // Draw line form decodeMux to registerfile
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black
+    SDL_RenderDrawLine(renderer, 386, 669, 386, 566);
+    SDL_RenderDrawLine(renderer, 387, 669, 387, 566);
+    SDL_RenderDrawLine(renderer, 388, 669, 388, 566);
+   
+    const std::vector< SDL_Vertex > decodeToRegisterFileArrow =
+    {
+        { SDL_FPoint{ 389, 563 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 380, 575 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 394, 575 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
+    };
+    SDL_RenderGeometry( renderer, nullptr, decodeToRegisterFileArrow.data(), decodeToRegisterFileArrow.size(), nullptr, 0 );
+
+
+
+
+
+
+
+
+
+    // Draw line form decodeMux to registerfile
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black
+
+
+
+    SDL_RenderDrawLine(renderer, 315, 397, 271, 397);
+    SDL_RenderDrawLine(renderer, 315, 398, 271, 398);
+    SDL_RenderDrawLine(renderer, 315, 399, 271, 399);
+
+
+
+    
+    SDL_RenderDrawLine(renderer, 270, 398, 270, 592);
+    SDL_RenderDrawLine(renderer, 271, 398, 271, 592);
+    SDL_RenderDrawLine(renderer, 272, 398, 272, 592);
+
+
+
+    SDL_RenderDrawLine(renderer, 271, 591, 468, 591);
+    SDL_RenderDrawLine(renderer, 271, 592, 468, 592);
+    SDL_RenderDrawLine(renderer, 271, 593, 468, 593);
+
+
+    SDL_RenderDrawLine(renderer, 467, 592, 467, 628);
+    SDL_RenderDrawLine(renderer, 468, 592, 468, 628);
+    SDL_RenderDrawLine(renderer, 469, 592, 469, 628);
+
+
+
+   
+    // const std::vector< SDL_Vertex > decodeToRegisterFileArrow =
+    // {
+    //     { SDL_FPoint{ 389, 563 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
+    //     { SDL_FPoint{ 380, 575 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
+    //     { SDL_FPoint{ 394, 575 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
+    // };
+    // SDL_RenderGeometry( renderer, nullptr, decodeToRegisterFileArrow.data(), decodeToRegisterFileArrow.size(), nullptr, 0 );
+
+
+
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderDrawLine(renderer,390,186,843,183);
+    SDL_RenderDrawLine(renderer,390,187,843,184);
+    SDL_RenderDrawLine(renderer,390,188,843,185);
+
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderDrawLine(renderer,390,184,390,357);
+    SDL_RenderDrawLine(renderer,390,185,390,358);
+    SDL_RenderDrawLine(renderer,390,186,390,359);
+
+
+
+
+
+
+
+
+// SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+// SDL_RenderDrawLine(renderer,388,183,843,183);
+// SDL_RenderDrawLine(renderer,388,184,843,184);
+// SDL_RenderDrawLine(renderer,388,185,843,185);
+
+
+
+
+
 
     // Draw Registers
     // SDL_Rect registerRect = {50, 200, 50, 200};
