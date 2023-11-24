@@ -2,18 +2,18 @@
 #include "SDL2/SDL.h"
 #include <iostream>
 
-void drawDottedLine(SDL_Renderer* renderer, SDL_Window* window, int gap, int height, int dotSpacing, int lineLength, int lineWidth) {
+void drawDottedLine(SDL_Renderer* renderer, SDL_Window* window, std::vector<int> gaps, int height, int dotSpacing, int lineLength, int lineWidth) {
     // Get window dimensions
     int screenWidth, screenHeight;
     SDL_GetWindowSize(window, &screenWidth, &screenHeight);
 
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // Set color to red
 
-    for (int i = 0; i < screenWidth/gap ; i++)
+    for (int i : gaps)
     {
         for (int y = 0; y < height; y += dotSpacing)
         {
-            SDL_Rect dotRect = {gap * (i + 1), y, lineLength, lineWidth};
+            SDL_Rect dotRect = {i, y, lineLength, lineWidth};
             SDL_RenderFillRect(renderer, &dotRect);
         }
     }
@@ -80,7 +80,7 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer) {
     // Draw pc mux
     SDL_Rect pcRect = {45, 290, 153, 35};
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // Blue
-    SDL_RenderFillRect(renderer, &pcRect);    
+    SDL_RenderFillRect(renderer, &pcRect);
     // Draw PC mux right
      const std::vector< SDL_Vertex > right_pc =
     {
@@ -105,7 +105,7 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer) {
      // Draw execute mux
     SDL_Rect executeRect = {560, 360, 27, 83};
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // Blue
-    SDL_RenderFillRect(renderer, &executeRect);    
+    SDL_RenderFillRect(renderer, &executeRect);
     // Draw mux execute down
      const std::vector< SDL_Vertex > right_mux_execute =
     {
@@ -129,7 +129,7 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer) {
      // Draw decode mux
     SDL_Rect decodeMuxRect = {450, 648, 35, 40};
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // Blue
-    SDL_RenderFillRect(renderer, &decodeMuxRect);    
+    SDL_RenderFillRect(renderer, &decodeMuxRect);
     // Draw mux decode down
      const std::vector< SDL_Vertex > right_mux_decode =
     {
@@ -146,13 +146,13 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer) {
     SDL_RenderDrawLine(renderer, 170, 176, 170, 100);
     SDL_RenderDrawLine(renderer, 169, 176, 169, 100);
     SDL_RenderDrawLine(renderer, 168, 176, 168, 100);
-    
+
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black
     SDL_RenderDrawLine(renderer, 170, 99, 840, 104);
     SDL_RenderDrawLine(renderer, 170, 100, 840, 105);
     SDL_RenderDrawLine(renderer, 170, 101, 840, 106);
-   
-    
+
+
     const std::vector< SDL_Vertex > irArrow =
     {
         { SDL_FPoint{ 825, 98 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
@@ -191,7 +191,7 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer) {
         { SDL_FPoint{ 58, 338 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
     };
     SDL_RenderGeometry( renderer, nullptr, pcPlus4Arrow.data(), pcPlus4Arrow.size(), nullptr, 0 );
-    
+
 
 
     // Draw line form mux decode to Pc mux
@@ -200,12 +200,12 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer) {
     SDL_RenderDrawLine(renderer, 99, 329, 99, 666);
     SDL_RenderDrawLine(renderer, 100, 329, 100, 666);
     SDL_RenderDrawLine(renderer, 101, 329, 101, 666);
-    
+
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black
     SDL_RenderDrawLine(renderer, 100, 664, 449, 667);
     SDL_RenderDrawLine(renderer, 100, 665, 449, 668);
     SDL_RenderDrawLine(renderer, 100, 666, 449, 669);
-   
+
     const std::vector< SDL_Vertex > deocdeMuxArrow =
     {
         { SDL_FPoint{ 101, 326 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
@@ -222,13 +222,13 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer) {
     SDL_RenderDrawLine(renderer, 142, 327, 142, 503);
     SDL_RenderDrawLine(renderer, 143, 327, 143, 503);
 
-    
+
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black
     SDL_RenderDrawLine(renderer, 142, 502, 315, 502);
     SDL_RenderDrawLine(renderer, 142, 503, 315, 503);
     SDL_RenderDrawLine(renderer, 142, 504, 315, 504);
 
-    
+
     const std::vector< SDL_Vertex > registerToPCMuxArrow =
     {
         { SDL_FPoint{ 140, 326 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
@@ -245,7 +245,7 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer) {
     SDL_RenderDrawLine(renderer, 178, 328, 178, 378);
     SDL_RenderDrawLine(renderer, 179, 328, 179, 378);
     SDL_RenderDrawLine(renderer, 180, 328, 180, 378);
-    
+
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black
     SDL_RenderDrawLine(renderer, 179, 379, 316, 379);
     SDL_RenderDrawLine(renderer, 179, 380, 316, 380);
@@ -267,14 +267,14 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer) {
     SDL_RenderDrawLine(renderer, 205, 305, 342, 305);
     SDL_RenderDrawLine(renderer, 205, 306, 342, 306);
     SDL_RenderDrawLine(renderer, 205, 307, 342, 307);
-   
-    
-    
+
+
+
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black
     SDL_RenderDrawLine(renderer, 341, 305, 341, 355);
     SDL_RenderDrawLine(renderer, 342, 305, 342, 355);
     SDL_RenderDrawLine(renderer, 343, 305, 343, 355);
-    
+
 
     const std::vector< SDL_Vertex > decodeToPCMuxSelArrow =
     {
@@ -292,7 +292,7 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer) {
     SDL_RenderDrawLine(renderer, 386, 669, 386, 566);
     SDL_RenderDrawLine(renderer, 387, 669, 387, 566);
     SDL_RenderDrawLine(renderer, 388, 669, 388, 566);
-   
+
     const std::vector< SDL_Vertex > decodeToRegisterFileArrow =
     {
         { SDL_FPoint{ 389, 563 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
@@ -320,7 +320,7 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer) {
 
 
 
-    
+
     SDL_RenderDrawLine(renderer, 270, 398, 270, 592);
     SDL_RenderDrawLine(renderer, 271, 398, 271, 592);
     SDL_RenderDrawLine(renderer, 272, 398, 272, 592);
@@ -338,7 +338,7 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer) {
 
 
 
-   
+
     // const std::vector< SDL_Vertex > decodeToRegisterFileArrow =
     // {
     //     { SDL_FPoint{ 389, 563 }, SDL_Color{ 0, 0, 0, 255 }, SDL_FPoint{ 0 }, },
@@ -403,5 +403,5 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer) {
 
 
      // Draw dotted line vertically for each stage of the pipeline
-    drawDottedLine(renderer, window, 256, screenHeight, 50, 10, 30); // 400 is the x-coordinate for the middle of the screen, 10 is the line width
+    drawDottedLine(renderer, window, {298, 597, 812, 1017}, screenHeight, 50, 10, 30); // 400 is the x-coordinate for the middle of the screen, 10 is the line width
 }
