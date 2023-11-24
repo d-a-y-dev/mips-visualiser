@@ -26,6 +26,12 @@
 #error This backend requires SDL 2.0.17+ because of SDL_RenderGeometry() function
 #endif
 
+template <typename ... Args>
+void log(Args&& ... args)
+{
+    (std::cout << ... << std::forward<Args>(args));
+}
+
 SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
 TTF_Font* font = nullptr;
@@ -60,6 +66,11 @@ void renderText(const char* text, int x, int y, SDL_Color textColor) {
 void handleButtonClick(SDL_Event& e) {
     int mouseX, mouseY;
     SDL_GetMouseState(&mouseX, &mouseY);
+
+    std::cout << "SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);" << std::endl;
+    log("SDL_RenderDrawLine(renderer,", oldMouseX, ",",oldMouseY, ",", mouseX, ",", mouseY, ");", "\n");
+    log("SDL_RenderDrawLine(renderer,", oldMouseX, ",",oldMouseY+1, ",", mouseX, ",", mouseY+1, ");", "\n");
+    log("SDL_RenderDrawLine(renderer,", oldMouseX, ",",oldMouseY+2, ",", mouseX, ",", mouseY+2, ");", "\n");
 
     std::cout << "X: " << mouseX << ", Y: " << mouseY << " | diff X: " << oldMouseX - mouseX << ", Y: " << oldMouseY - mouseY << std::endl;
 
