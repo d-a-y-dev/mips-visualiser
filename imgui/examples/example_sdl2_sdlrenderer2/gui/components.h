@@ -32,6 +32,10 @@ void draw_line_decoder_to_mux_to_alu_imm(SDL_Renderer* renderer, SDL_Color color
 
 void draw_line_decoder_to_mux_to_alu_sel(SDL_Renderer* renderer, SDL_Color color);
 
+void draw_line_decoder_to_register_file(SDL_Renderer* renderer, SDL_Color color);
+
+void draw_line_decoder_to_mux_to_pc(SDL_Renderer* renderer, SDL_Color color);
+
 void draw_line_register_files_to_fetch_mux(SDL_Renderer* renderer, SDL_Color color);
 
 void draw_line_register_files_to_mux_to_alu(SDL_Renderer* renderer, SDL_Color color);
