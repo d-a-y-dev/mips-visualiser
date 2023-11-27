@@ -241,6 +241,8 @@ static void mainloop()
             }
 
             ImGui::Text("ALUOp: %d  ALUSrc: %d", Cycle_Instances[counter].IDEX_Reg.ALUOp, Cycle_Instances[counter].IDEX_Reg.ALUSrc);
+            ImGui::Text("STALL-F: %d  STALL-D: %d", Cycle_Instances[counter].Stall_Unit.Fetch, Cycle_Instances[counter].Stall_Unit.Decode);
+            ImGui::Text("RegDst: %d  Syscall: %d  RegDst: %d  Syscall: %d", Cycle_Instances[counter].MEMWB_Reg.RegDst, Cycle_Instances[counter].MEMWB_Reg.Syscall, Cycle_Instances[counter].WROTE_Reg.RegDst, Cycle_Instances[counter].WROTE_Reg.Syscall);
         }
 
 

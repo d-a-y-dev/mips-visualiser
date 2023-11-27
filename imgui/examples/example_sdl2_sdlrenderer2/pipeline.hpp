@@ -110,6 +110,8 @@ typedef struct WROTE_BACK
     enum Signal Syscall;
 } WROTE_BACK;
 
+extern WROTE_BACK WROTE_REG;
+
 typedef struct CONTROL_UNIT
 {
     enum Signal RegDst;

@@ -1177,8 +1177,8 @@ void decode()
     IDEX_REG.HI = CURRENT_STATE.HI;
     IDEX_REG.LO = CURRENT_STATE.LO;
 
-    forward(IR);
-    // check_dependency(IR);
+    // forward(IR);
+    check_dependency(IR);
     if (STALL.Decode > 0) { DEBUG_PRINT("STALLING in DECODE [%d]\n", STALL.Decode); STALL.Decode--; return; }
 
     DEBUG_PRINT("DECODE RAN\n");
@@ -1399,6 +1399,7 @@ void process_instruction()
     cycle_info.IDEX_Reg = IDEX_REG;
     cycle_info.EXMEM_Reg = EXMEM_REG;
     cycle_info.MEMWB_Reg = MEMWB_REG;
+    cycle_info.WROTE_Reg = WROTE_REG;
     cycle_info.Control_Unit = CONTROL;
     cycle_info.Hazard_Unit = HAZARD;
     cycle_info.Stall_Unit = STALL;
