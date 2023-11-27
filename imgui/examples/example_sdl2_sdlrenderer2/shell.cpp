@@ -22,6 +22,8 @@
 
 #include "shell.hpp"
 #include <string>
+#include <sstream>
+#include <iostream>
 
 /***************************************************************/
 /* Main memory.                                                */
@@ -61,6 +63,7 @@ mem_region_t MEM_REGIONS[] = {
 CPU_State CURRENT_STATE, NEXT_STATE;
 int RUN_BIT;	/* run bit */
 int INSTRUCTION_COUNT;
+std::string OUTPUT;
 
 /***************************************************************/
 /*                                                             */
@@ -244,13 +247,20 @@ void mdump(FILE * dumpsim_file, int start, int stop) {
 void rdump(FILE * dumpsim_file) {
   int k;
 
+  OUTPUT = "";
+  std::stringstream ss;
+
   printf("\nCurrent register/bus values :\n");
   printf("-------------------------------------\n");
   printf("Instruction Count : %u\n", INSTRUCTION_COUNT);
   printf("PC                : 0x%08x\n", CURRENT_STATE.PC);
   printf("Registers:\n");
   for (k = 0; k < MIPS_REGS; k++)
+  {
     printf("R%d: 0x%08x\n", k, CURRENT_STATE.REGS[k]);
+    ss << "R" << k << ": 0x" << CURRENT_STATE.REGS[k] << std::endl;
+  }
+  OUTPUT = ss.str();
   printf("HI: 0x%08x\n", CURRENT_STATE.HI);
   printf("LO: 0x%08x\n", CURRENT_STATE.LO);
   printf("\n");
@@ -460,6 +470,11 @@ void run_shell(std::string instrs)
   instrs = "0x2402000a 0x24080005 0x1088021 0x2409000a 0xc";
 
   /* Error Checking */
+  if (instrs.empty())
+  {
+    std::cout << "Error: usage incorrect" << std::endl;
+    exit(1);
+  }
   // if (argc < 2) {
   //   printf("Error: usage: %s <program_file_1> <program_file_2> ...\n",
   //          argv[0]);
@@ -475,10 +490,14 @@ void run_shell(std::string instrs)
     exit(-1);
   }
 
-  while (1)
-  {
-    get_command(dumpsim_file);
-  }
+  go();
+
+  rdump(dumpsim_file);
+
+  // while (1)
+  // {
+  //   get_command(dumpsim_file);
+  // }
 
 }
 
@@ -782,10 +801,10 @@ void test()
 }
 #endif
 
-int main(int argc, char *argv[]) {
-#ifndef TEST_MODE
-  run_shell("");
-#else
-  test();
-#endif
-}
+// int main(int argc, char *argv[]) {
+// #ifndef TEST_MODE
+//   run_shell("");
+// #else
+//   test();
+// #endif
+// }

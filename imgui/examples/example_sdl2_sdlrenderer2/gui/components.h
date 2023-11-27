@@ -38,7 +38,9 @@ void draw_line_decoder_to_mux_to_pc(SDL_Renderer* renderer, SDL_Color color);
 
 void draw_line_register_files_to_fetch_mux(SDL_Renderer* renderer, SDL_Color color);
 
-void draw_line_register_files_to_mux_to_alu(SDL_Renderer* renderer, SDL_Color color);
+void draw_line_register_files_to_mux_to_alu_1(SDL_Renderer* renderer, SDL_Color color);
+
+void draw_line_register_files_to_mux_to_alu_2(SDL_Renderer* renderer, SDL_Color color);
 
 void draw_line_decode_mux_to_alu(SDL_Renderer* renderer, SDL_Color color);
 
@@ -46,7 +48,11 @@ void draw_line_alu_to_main_memory_data(SDL_Renderer* renderer, SDL_Color color);
 
 void draw_line_alu_to_main_memory_address(SDL_Renderer* renderer, SDL_Color color);
 
-void draw_line_alu_to_mux_to_pc(SDL_Renderer* renderer, SDL_Color color);
+void draw_line_alu_to_mux_to_pc_1(SDL_Renderer* renderer, SDL_Color color);
+
+void draw_line_alu_to_mux_to_pc_2(SDL_Renderer* renderer, SDL_Color color);
+
+void draw_line_alu_to_mux_to_pc_3(SDL_Renderer* renderer, SDL_Color color);
 
 void draw_line_main_memory_to_mux_to_pc(SDL_Renderer* renderer, SDL_Color color);
 

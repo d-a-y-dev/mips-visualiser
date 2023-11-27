@@ -17,6 +17,8 @@
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_sdlrenderer2.h"
 #include "gui/design.h"
+#include "shell.hpp"
+// #include "pipeline.h"
 #include <stdio.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
@@ -32,12 +34,15 @@ void log(Args&& ... args)
     (std::cout << ... << std::forward<Args>(args));
 }
 
+// std::vector<Cycle_Instance> Cycle_Instances
+
 SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
 TTF_Font* font = nullptr;
 bool done = false;
 int oldMouseX = 0;
 int oldMouseY = 0;
+int counter = 0;
 
 // Our state
 bool show_demo_window = true;
@@ -67,10 +72,10 @@ void handleButtonClick(SDL_Event& e) {
     int mouseX, mouseY;
     SDL_GetMouseState(&mouseX, &mouseY);
 
-    std::cout << "SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);" << std::endl;
-    log("SDL_RenderDrawLine(renderer,", oldMouseX, ",",oldMouseY, ",", mouseX, ",", mouseY, ");", "\n");
-    log("SDL_RenderDrawLine(renderer,", oldMouseX, ",",oldMouseY+1, ",", mouseX, ",", mouseY+1, ");", "\n");
-    log("SDL_RenderDrawLine(renderer,", oldMouseX, ",",oldMouseY+2, ",", mouseX, ",", mouseY+2, ");", "\n");
+    // std::cout << "SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);" << std::endl;
+    // log("SDL_RenderDrawLine(renderer,", oldMouseX, ",",oldMouseY, ",", mouseX, ",", mouseY, ");", "\n");
+    // log("SDL_RenderDrawLine(renderer,", oldMouseX, ",",oldMouseY+1, ",", mouseX, ",", mouseY+1, ");", "\n");
+    // log("SDL_RenderDrawLine(renderer,", oldMouseX, ",",oldMouseY+2, ",", mouseX, ",", mouseY+2, ");", "\n");
 
     std::cout << "X: " << mouseX << ", Y: " << mouseY << " | diff X: " << oldMouseX - mouseX << ", Y: " << oldMouseY - mouseY << std::endl;
 
@@ -143,22 +148,21 @@ static void mainloop()
     // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
     {
         static float f = 0.0f;
-        static int counter = 0;
 
         ImGui::SetNextWindowSize(ImVec2(0.0f, 0.0f));
         ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
 
         ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
         ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-        ImGui::Checkbox("Another Window", &show_another_window);
+        // ImGui::Checkbox("Another Window", &show_another_window);
 
-        ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-        ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+        // ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+        // ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
 
-        if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-            counter++;
-        ImGui::SameLine();
-        ImGui::Text("counter = %d", counter);
+        // if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+        //     counter++;
+        // ImGui::SameLine();
+        // ImGui::Text("counter = %d", counter);
 
         // Note: we are using a fixed-sized buffer for simplicity here. See ImGuiInputTextFlags_CallbackResize
         // and the code in misc/cpp/imgui_stdlib.h for how to setup InputText() for dynamically resizing strings.
@@ -168,13 +172,77 @@ static void mainloop()
 
         static ImGuiInputTextFlags flags = ImGuiInputTextFlags_AllowTabInput;
         // HelpMarker("You can use the ImGuiInputTextFlags_CallbackResize facility if you need to wire InputTextMultiline() to a dynamic string type. See misc/cpp/imgui_stdlib.h for an example. (This is not demonstrated in imgui_demo.cpp because we don't want to include <string> in here)");
-        ImGui::CheckboxFlags("ImGuiInputTextFlags_ReadOnly", &flags, ImGuiInputTextFlags_ReadOnly);
-        ImGui::CheckboxFlags("ImGuiInputTextFlags_AllowTabInput", &flags, ImGuiInputTextFlags_AllowTabInput);
-        ImGui::CheckboxFlags("ImGuiInputTextFlags_CtrlEnterForNewLine", &flags, ImGuiInputTextFlags_CtrlEnterForNewLine);
+        // ImGui::CheckboxFlags("ImGuiInputTextFlags_ReadOnly", &flags, ImGuiInputTextFlags_ReadOnly);
+        // ImGui::CheckboxFlags("ImGuiInputTextFlags_AllowTabInput", &flags, ImGuiInputTextFlags_AllowTabInput);
+        // ImGui::CheckboxFlags("ImGuiInputTextFlags_CtrlEnterForNewLine", &flags, ImGuiInputTextFlags_CtrlEnterForNewLine);
         ImGui::InputTextMultiline("##source", text, IM_ARRAYSIZE(text), ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 8), flags);
 
         if (ImGui::Button("Submit"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+        {
             std::cout << text << std::endl;
+            run_shell("");
+        }
+
+
+        // if(ImGui::Button("Next Cycle"))
+        //     //
+
+        ImGui::Text("Total Cycle - %lu", Cycle_Instances.size());
+
+        ImGui::AlignTextToFramePadding();
+        // ImGui::Text("Hold to repeat:");
+        ImGui::SameLine();
+
+        // Arrow buttons with Repeater
+        // IMGUI_DEMO_MARKER("Widgets/Basic/Buttons (Repeating)");
+        // int counter = 0;
+        float spacing = ImGui::GetStyle().ItemInnerSpacing.x;
+        ImGui::PushButtonRepeat(true);
+        if (ImGui::ArrowButton("##left", ImGuiDir_Left)) { counter--; }
+        ImGui::SameLine(0.0f, spacing);
+        if (ImGui::ArrowButton("##right", ImGuiDir_Right)) { counter++; }
+        ImGui::PopButtonRepeat();
+        ImGui::SameLine();
+        ImGui::Text("Cycle: %d", counter);
+
+        if(!Cycle_Instances.empty())
+        {
+            ImGui::Text("PC: %x", Cycle_Instances[counter].CPU_State.PC);
+
+            ImGuiStyle& style = ImGui::GetStyle();
+            float child_w = (ImGui::GetContentRegionAvail().x - 4 * style.ItemSpacing.x) / 5;
+            for (int i = 0; i < 5; i++)
+            {
+                if (i > 0) ImGui::SameLine();
+                ImGui::BeginGroup();
+                const char* names[] = { "Fetch", "Decode", "Execute", "Memory", "Writeback" };
+                ImGui::TextUnformatted(names[i]);
+
+                const ImGuiWindowFlags child_flags = 0;
+                const ImGuiID child_id = ImGui::GetID((void*)(intptr_t)i);
+                const bool child_is_visible = ImGui::BeginChild(child_id, ImVec2(child_w, 200.0f), ImGuiChildFlags_Border, child_flags);
+                if (ImGui::BeginMenuBar())
+                {
+                    ImGui::TextUnformatted("abc");
+                    ImGui::EndMenuBar();
+                }
+                if (child_is_visible) // Avoid calling SetScrollHereY when running with culled items
+                {
+                    for (int item = 0; item < 32; item++)
+                    {
+                        ImGui::Text("R%d: %d",item,  Cycle_Instances[i+counter].CPU_State.REGS[item]);
+                    }
+                }
+                float scroll_y = ImGui::GetScrollY();
+                float scroll_max_y = ImGui::GetScrollMaxY();
+                ImGui::EndChild();
+                ImGui::Text("%.0f/%.0f", scroll_y, scroll_max_y);
+                ImGui::EndGroup();
+            }
+
+            ImGui::Text("ALUOp: %d  ALUSrc: %d", Cycle_Instances[counter].IDEX_Reg.ALUOp, Cycle_Instances[counter].IDEX_Reg.ALUSrc);
+        }
+
 
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io->Framerate, io->Framerate);
 
@@ -201,14 +269,14 @@ static void mainloop()
     // SDL_Rect rect = { 50, 50, 100, 50 }; // x, y, width, height
     // SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // RGBA color format (red)
     // SDL_RenderFillRect(renderer, &rect);
-    renderMIPSArchitecture(window, renderer);
+    renderMIPSArchitecture(window, renderer, counter);
 
     // Get window dimensions
     int screenWidth, screenHeight;
     SDL_GetWindowSize(window, &screenWidth, &screenHeight);
 
-    SDL_Rect background_dest = {0, 0, screenWidth, screenHeight};
-    SDL_RenderCopy(renderer, background_texture, NULL, &background_dest);
+    // SDL_Rect background_dest = {0, 0, screenWidth, screenHeight};
+    // SDL_RenderCopy(renderer, background_texture, NULL, &background_dest);
 
 
     ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());

@@ -18,6 +18,7 @@
 #define _SIM_SHELL_H_
 
 #include <stdint.h>
+#include <iostream>
 
 #define FALSE 0
 #define TRUE  1
@@ -39,6 +40,7 @@ extern int RUN_BIT;	/* run bit */
 
 uint32_t mem_read_32(uint32_t address);
 void     mem_write_32(uint32_t address, uint32_t value);
+void     run_shell(std::string instrs);
 
 /* YOU IMPLEMENT THIS FUNCTION */
 void process_instruction();

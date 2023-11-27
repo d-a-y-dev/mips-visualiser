@@ -1,14 +1,16 @@
 #include "design.h"
 #include "SDL2/SDL.h"
 #include "components.h"
+#include "../shell.hpp"
 #include <iostream>
+#include <sstream>
 
 void drawDottedLine(SDL_Renderer* renderer, SDL_Window* window, std::vector<int> gaps, int height, int dotSpacing, int lineLength, int lineWidth) {
     // Get window dimensions
     int screenWidth, screenHeight;
     SDL_GetWindowSize(window, &screenWidth, &screenHeight);
 
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // Set color to red
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 0); // Set color to red
 
     for (int i : gaps)
     {
@@ -20,7 +22,7 @@ void drawDottedLine(SDL_Renderer* renderer, SDL_Window* window, std::vector<int>
     }
 }
 
-void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer) {
+void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer, int currentCycle) {
     // Get window dimensions
     int screenWidth, screenHeight;
     SDL_GetWindowSize(window, &screenWidth, &screenHeight);
@@ -28,39 +30,168 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer) {
     SDL_Color textColor = {0, 0, 0, 255}; // Black
     int spaceBetween = 256;
 
-    SDL_Color color = SDL_Color{0,0,0, 255};
+    SDL_Color color = SDL_Color{0,0,0, 255}; // Black
+    SDL_Color black = SDL_Color{0,0,0, 255}; // Black
+    SDL_Color red = SDL_Color{255,0,0,255}; // Red
+    SDL_Color blue = SDL_Color{0,0,255,255}; // Blue
+    SDL_Color green = SDL_Color{0,255,0,255}; // Green
+    SDL_Color orange = SDL_Color{255,148,112,255}; // Green
 
-    draw_fetch_mux(renderer, color);
-    draw_fetch_pc(renderer, color);
-    draw_decode_decoder(renderer, color);
-    draw_decode_register_files(renderer, color);
-    draw_decode_mux_to_alu(renderer, color);
-    draw_decode_mux_to_fetch(renderer, color);
-    draw_execute_alu(renderer, color);
-    draw_memory_main_memory(renderer, color);
-    draw_line_pc_to_main_memory(renderer, color);
-    draw_line_mux_to_pc(renderer, color);
-    draw_line_main_memory_to_decoder(renderer, color);
-    draw_line_decoder_to_mux_sel(renderer, color);
-    draw_line_decoder_to_mux_imm(renderer, color);
-    draw_line_decoder_to_mux_to_fetch(renderer, color);
-    draw_line_decoder_to_mux_to_alu_imm(renderer, color);
-    draw_line_decoder_to_mux_to_alu_sel(renderer, color);
-    draw_line_register_files_to_fetch_mux(renderer, color);
-    draw_line_register_files_to_mux_to_alu(renderer, color);
-    draw_line_decode_mux_to_alu(renderer, color);
-    draw_line_alu_to_main_memory_data(renderer, color);
-    draw_line_alu_to_main_memory_address(renderer, color);
-    draw_line_alu_to_mux_to_pc(renderer, color);
-    draw_line_main_memory_to_mux_to_pc(renderer, color);
-    draw_line_mux_to_mux(renderer, color);
-    draw_line_decoder_to_register_file(renderer, color);
-    draw_line_decoder_to_mux_to_pc(renderer, color);
+
+    // Inside Fetch
+    draw_fetch_mux(renderer, black);
+    draw_fetch_pc(renderer, black);
+    draw_line_pc_to_main_memory(renderer, black);
+    draw_line_mux_to_pc(renderer, black);
+
+    if (!Cycle_Instances.empty() && (currentCycle < Cycle_Instances.size() - 4))
+    {
+        draw_fetch_mux(renderer, red);
+        draw_fetch_pc(renderer, red);
+        draw_line_pc_to_main_memory(renderer, red);
+        draw_line_mux_to_pc(renderer, red);
+
+        std::stringstream ss;
+        ss << std::hex << Cycle_Instances[currentCycle].CPU_State.PC;
+        renderText(ss.str().c_str(), 120, 185, textColor);
+    }
+    renderText("PC", 100, 140, textColor);
+    renderText("PC + 4", 15, 412, textColor);
+
+    // Inside Decode
+    draw_decode_decoder(renderer, black);
+    draw_decode_mux_to_alu(renderer, black);
+    draw_decode_register_files(renderer, black);
+    draw_line_decoder_to_mux_sel(renderer, black);
+    draw_line_decoder_to_mux_imm(renderer, black);
+    draw_line_decoder_to_mux_to_fetch(renderer, black);
+    draw_line_decoder_to_mux_to_alu_sel(renderer, black);
+    draw_line_decoder_to_mux_to_alu_imm(renderer, black);
+    draw_line_decode_mux_to_alu(renderer, black);
+    draw_line_decoder_to_register_file(renderer, black);
+    draw_line_decoder_to_mux_to_pc(renderer, black);
+    draw_line_register_files_to_fetch_mux(renderer, black);
+    draw_line_register_files_to_mux_to_alu_1(renderer, black);
+    draw_line_register_files_to_mux_to_alu_2(renderer, black);
+
+    if ((currentCycle-1 >= 0) && (currentCycle < Cycle_Instances.size() - 3))
+    {
+        draw_decode_decoder(renderer, blue);
+
+        std::stringstream ss;
+        ss << std::hex << Cycle_Instances[currentCycle-1].CPU_State.PC;
+        renderText(ss.str().c_str(), 340, 372, textColor);
+
+        IDEX_PILELINE_REG idex_regs = Cycle_Instances[currentCycle].IDEX_Reg;
+
+        if (idex_regs.ALUOp == HIGH && idex_regs.ALUSrc == HIGH)
+        {
+            draw_decode_mux_to_alu(renderer, blue);
+            draw_decode_register_files(renderer, blue);
+
+            draw_line_decoder_to_register_file(renderer, blue);
+            draw_line_decoder_to_mux_to_alu_sel(renderer, blue);
+            draw_line_register_files_to_mux_to_alu_1(renderer, blue);
+            draw_line_decoder_to_mux_to_alu_imm(renderer, blue);
+            draw_line_decode_mux_to_alu(renderer, blue);
+        } else if (idex_regs.ALUOp == HIGH || idex_regs.Syscall == HIGH)
+        {
+            draw_decode_mux_to_alu(renderer, blue);
+            draw_decode_register_files(renderer, blue);
+
+            draw_line_register_files_to_mux_to_alu_1(renderer, blue);
+            draw_line_register_files_to_mux_to_alu_2(renderer, blue);
+            draw_line_decoder_to_mux_to_alu_sel(renderer, blue);
+            draw_line_decoder_to_register_file(renderer, blue);
+            draw_line_decode_mux_to_alu(renderer, blue);
+        }
+        // IF Jump/Branch
+        // IF use ALU.OP = high
+        // IF ALUSrc = high, use extendimm (no need to access registerfiles)
+    }
+
+
+    // Inside Execute
+    draw_execute_alu(renderer, black);
+    draw_line_alu_to_main_memory_data(renderer, black);
+    draw_line_alu_to_main_memory_address(renderer, black);
+    draw_line_alu_to_mux_to_pc_1(renderer, black);
+
+    if (currentCycle-2 >= 0 && (currentCycle < Cycle_Instances.size() - 2))
+    {
+        // if (exmem_regs)
+        draw_execute_alu(renderer, green);
+
+        std::stringstream ss;
+        ss << std::hex << Cycle_Instances[currentCycle-2].CPU_State.PC;
+        renderText(ss.str().c_str(), 638, 355, textColor);
+
+        EXMEM_PIPELINE_REG exmem_regs = Cycle_Instances[currentCycle].EXMEM_Reg;
+
+        if(exmem_regs.MemWrite == HIGH)
+        {
+            draw_line_alu_to_main_memory_data(renderer, green);
+            draw_line_alu_to_main_memory_address(renderer, green);
+        }
+        else if (exmem_regs.MemRead == HIGH)
+        {
+            draw_line_alu_to_main_memory_address(renderer, green);
+        }
+        else if (exmem_regs.RegDst == HIGH || exmem_regs.Syscall == HIGH)
+        {
+            draw_line_alu_to_mux_to_pc_1(renderer, green);
+        }
+    }
+
+    //
+
+
+    // Inside Memory
+    draw_memory_main_memory(renderer, black);
+    draw_line_main_memory_to_decoder(renderer, black);
+    draw_line_main_memory_to_mux_to_pc(renderer, black);
+    draw_line_alu_to_mux_to_pc_2(renderer, black);
+
+    if ((currentCycle-1 >= 0) && (currentCycle < Cycle_Instances.size() - 3))
+    {
+        draw_memory_main_memory(renderer, blue);
+        draw_line_main_memory_to_decoder(renderer, blue);
+    }
+
+    if (currentCycle - 3 >= 0  && (currentCycle < Cycle_Instances.size() - 1))
+    {
+        MEMWB_PIPELINE_REG memwb_regs = Cycle_Instances[currentCycle].MEMWB_Reg;
+
+        if (memwb_regs.RegDst == HIGH || memwb_regs.Syscall == HIGH)
+        {
+            draw_line_alu_to_mux_to_pc_2(renderer, green);
+        }
+    }
+
+
+    // Inside Writeback
+    draw_line_alu_to_mux_to_pc_3(renderer, black);
+    // Under
+    draw_decode_mux_to_fetch(renderer, black);
+    draw_line_mux_to_mux(renderer, black);
+
+    if (currentCycle - 4 >= 0)
+    {
+        WROTE_BACK wrote_regs = Cycle_Instances[currentCycle].WROTE_Reg;
+
+        if (wrote_regs.RegDst == HIGH || wrote_regs.Syscall == HIGH)
+        {
+            draw_line_alu_to_mux_to_pc_3(renderer, green);
+            draw_decode_mux_to_fetch(renderer, green);
+            draw_line_mux_to_mux(renderer, green);
+        }
+    }
+
+
+
 
     // FETCH    renderText("Next", 40, 236, textColor);
-    renderText("PC", 50, 263, textColor);
 
-    renderText("PC + 4", 15, 412, textColor);
 
     renderText("Data", 85, 681, textColor);
 
@@ -77,7 +208,9 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer) {
     // Decode
     renderText("Sel", 322, 434, textColor);
 
-    renderText("Operands", 405, 447, textColor);
+    renderText("Data2", 440, 441, textColor);
+
+    renderText("Data1", 525, 509, textColor);
 
     renderText("Imm", 479, 343, textColor);
 
