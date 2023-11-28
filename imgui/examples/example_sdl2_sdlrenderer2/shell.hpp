@@ -53,6 +53,8 @@ extern CPU_State CURRENT_STATE, NEXT_STATE;
 
 extern int RUN_BIT;	/* run bit */
 
+extern bool DATA_FORWARD;
+
 extern std::string OUTPUT;
 
 extern std::vector<Cycle_Instance> Cycle_Instances;

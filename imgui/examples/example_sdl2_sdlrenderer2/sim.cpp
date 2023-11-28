@@ -1177,8 +1177,15 @@ void decode()
     IDEX_REG.HI = CURRENT_STATE.HI;
     IDEX_REG.LO = CURRENT_STATE.LO;
 
-    // forward(IR);
-    check_dependency(IR);
+    if (DATA_FORWARD)
+    {
+        forward(IR);
+    }
+    else
+    {
+        check_dependency(IR);
+    }
+
     if (STALL.Decode > 0) { DEBUG_PRINT("STALLING in DECODE [%d]\n", STALL.Decode); STALL.Decode--; return; }
 
     DEBUG_PRINT("DECODE RAN\n");

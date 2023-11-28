@@ -467,7 +467,10 @@ void run_shell(std::string instrs)
 {
   FILE * dumpsim_file;
 
-  instrs = "0x2402000a 0x24080005 0x1088021 0x2409000a 0xc";
+  if (instrs.empty())
+  {
+    instrs = "0x2402000a 0x24080005 0x1088021 0x2409000a 0xc";
+  }
 
   /* Error Checking */
   if (instrs.empty())

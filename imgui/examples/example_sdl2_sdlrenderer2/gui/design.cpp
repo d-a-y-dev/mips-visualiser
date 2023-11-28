@@ -74,7 +74,9 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer, int curr
     draw_line_register_files_to_mux_to_alu_1(renderer, black);
     draw_line_register_files_to_mux_to_alu_2(renderer, black);
 
-    if ((currentCycle-1 >= 0) && (currentCycle < Cycle_Instances.size() - 3))
+    if ((currentCycle-1 >= 0) && (currentCycle < Cycle_Instances.size() - 3) &&
+    Cycle_Instances[currentCycle-1].Stall_Unit.Fetch == 0
+    )
     {
         draw_decode_decoder(renderer, blue);
 
@@ -84,7 +86,20 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer, int curr
 
         IDEX_PILELINE_REG idex_regs = Cycle_Instances[currentCycle].IDEX_Reg;
 
-        if (idex_regs.ALUOp == HIGH && idex_regs.ALUSrc == HIGH)
+        if (idex_regs.Jump == HIGH)
+        {
+            if (idex_regs.RegWrite == HIGH)
+            {
+
+            }
+            else
+            {
+                draw_line_decoder_to_mux_sel(renderer, blue);
+                draw_line_decoder_to_mux_imm(renderer, blue);
+            }
+        }
+
+        else if (idex_regs.ALUOp == HIGH && idex_regs.ALUSrc == HIGH)
         {
             draw_decode_mux_to_alu(renderer, blue);
             draw_decode_register_files(renderer, blue);
@@ -118,16 +133,21 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer, int curr
     draw_line_alu_to_mux_to_pc_1(renderer, black);
 
     if (currentCycle-2 >= 0 && (currentCycle < Cycle_Instances.size() - 2) &&
-    (Cycle_Instances[currentCycle-1].Stall_Unit.Decode == 0 && Cycle_Instances[currentCycle-2].Stall_Unit.Decode == 0 ))
+    (Cycle_Instances[currentCycle-1].Stall_Unit.Decode == 0 && Cycle_Instances[currentCycle-2].Stall_Unit.Decode == 0 ) &&
+    (Cycle_Instances[currentCycle-1].Stall_Unit.Fetch == 0 && Cycle_Instances[currentCycle-2].Stall_Unit.Fetch == 0 )
+    )
     {
-        // if (exmem_regs)
-        draw_execute_alu(renderer, green);
+        EXMEM_PIPELINE_REG exmem_regs = Cycle_Instances[currentCycle].EXMEM_Reg;
+
+        if (exmem_regs.Jump == LOW)
+        {
+            draw_execute_alu(renderer, green);
+        }
 
         std::stringstream ss;
         ss << std::hex << Cycle_Instances[currentCycle-2].CPU_State.PC - 4;
         renderText(ss.str().c_str(), 638, 355, textColor);
 
-        EXMEM_PIPELINE_REG exmem_regs = Cycle_Instances[currentCycle].EXMEM_Reg;
 
         if(exmem_regs.MemWrite == HIGH)
         {
@@ -160,7 +180,9 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer, int curr
     }
 
     if (currentCycle - 3 >= 0  && (currentCycle < Cycle_Instances.size() - 1) &&
-    (Cycle_Instances[currentCycle-2].Stall_Unit.Decode == 0 && Cycle_Instances[currentCycle-3].Stall_Unit.Decode == 0 ))
+    (Cycle_Instances[currentCycle-2].Stall_Unit.Decode == 0 && Cycle_Instances[currentCycle-3].Stall_Unit.Decode == 0 )&&
+    (Cycle_Instances[currentCycle-2].Stall_Unit.Fetch == 0 && Cycle_Instances[currentCycle-3].Stall_Unit.Fetch == 0 )
+    )
     {
         std::stringstream ss;
         ss << std::hex << Cycle_Instances[currentCycle-3].CPU_State.PC - 4;

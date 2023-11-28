@@ -40,6 +40,7 @@ SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
 TTF_Font* font = nullptr;
 bool done = false;
+bool DATA_FORWARD = false;
 int oldMouseX = 0;
 int oldMouseY = 0;
 int counter = 0;
@@ -142,18 +143,18 @@ static void mainloop()
     ImGui::NewFrame();
 
     // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-    if (show_demo_window)
-        ImGui::ShowDemoWindow(&show_demo_window);
+    // if (show_demo_window)
+    //     ImGui::ShowDemoWindow(&show_demo_window);
 
     // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
     {
         static float f = 0.0f;
 
         ImGui::SetNextWindowSize(ImVec2(0.0f, 0.0f));
-        ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+        ImGui::Begin("Stats");                          // Create a window called "Hello, world!" and append into it.
 
-        ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-        ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
+        // ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+        // ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
         // ImGui::Checkbox("Another Window", &show_another_window);
 
         // ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
@@ -166,22 +167,23 @@ static void mainloop()
 
         // Note: we are using a fixed-sized buffer for simplicity here. See ImGuiInputTextFlags_CallbackResize
         // and the code in misc/cpp/imgui_stdlib.h for how to setup InputText() for dynamically resizing strings.
-        static char text[1024 * 16] =
-            "label:\n"
-            "\tlock cmpxchg8b eax\n";
+        static char text[1024 * 16] = "";
 
         static ImGuiInputTextFlags flags = ImGuiInputTextFlags_AllowTabInput;
         // HelpMarker("You can use the ImGuiInputTextFlags_CallbackResize facility if you need to wire InputTextMultiline() to a dynamic string type. See misc/cpp/imgui_stdlib.h for an example. (This is not demonstrated in imgui_demo.cpp because we don't want to include <string> in here)");
         // ImGui::CheckboxFlags("ImGuiInputTextFlags_ReadOnly", &flags, ImGuiInputTextFlags_ReadOnly);
         // ImGui::CheckboxFlags("ImGuiInputTextFlags_AllowTabInput", &flags, ImGuiInputTextFlags_AllowTabInput);
         // ImGui::CheckboxFlags("ImGuiInputTextFlags_CtrlEnterForNewLine", &flags, ImGuiInputTextFlags_CtrlEnterForNewLine);
-        ImGui::InputTextMultiline("##source", text, IM_ARRAYSIZE(text), ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 8), flags);
+        ImGui::InputTextMultiline("##source", text, IM_ARRAYSIZE(text), ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 4), flags);
 
-        if (ImGui::Button("Submit"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+        if (ImGui::Button("Run"))// Buttons return true when clicked (most widgets return true when edited/activated)
         {
+            Cycle_Instances.clear();
             std::cout << text << std::endl;
-            run_shell("");
+            run_shell(text);
         }
+        ImGui::SameLine();
+        ImGui::Checkbox("Data Forward", &DATA_FORWARD);
 
 
         // if(ImGui::Button("Next Cycle"))
@@ -198,9 +200,9 @@ static void mainloop()
         // int counter = 0;
         float spacing = ImGui::GetStyle().ItemInnerSpacing.x;
         ImGui::PushButtonRepeat(true);
-        if (ImGui::ArrowButton("##left", ImGuiDir_Left)) { counter--; }
+        if (ImGui::ArrowButton("##left", ImGuiDir_Left)) { if (counter > 0) {counter--;} }
         ImGui::SameLine(0.0f, spacing);
-        if (ImGui::ArrowButton("##right", ImGuiDir_Right)) { counter++; }
+        if (ImGui::ArrowButton("##right", ImGuiDir_Right)) { if (counter < Cycle_Instances.size()) {counter++;} }
         ImGui::PopButtonRepeat();
         ImGui::SameLine();
         ImGui::Text("Cycle: %d", counter);
@@ -240,7 +242,7 @@ static void mainloop()
                 ImGui::EndGroup();
             }
 
-            ImGui::Text("ALUOp: %d  ALUSrc: %d", Cycle_Instances[counter].IDEX_Reg.ALUOp, Cycle_Instances[counter].IDEX_Reg.ALUSrc);
+            ImGui::Text("ALUOp: %d  ALUSrc: %d  Jump: %d  RegWrite: %d", Cycle_Instances[counter].IDEX_Reg.ALUOp, Cycle_Instances[counter].IDEX_Reg.ALUSrc, Cycle_Instances[counter].IDEX_Reg.Jump, Cycle_Instances[counter].IDEX_Reg.RegWrite);
             ImGui::Text("STALL-F: %d  STALL-D: %d", Cycle_Instances[counter].Stall_Unit.Fetch, Cycle_Instances[counter].Stall_Unit.Decode);
             ImGui::Text("RegDst: %d  Syscall: %d  RegDst: %d  Syscall: %d", Cycle_Instances[counter].MEMWB_Reg.RegDst, Cycle_Instances[counter].MEMWB_Reg.Syscall, Cycle_Instances[counter].WROTE_Reg.RegDst, Cycle_Instances[counter].WROTE_Reg.Syscall);
         }
