@@ -16,8 +16,16 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Install Emscripten
+        uses: mymindstorm/setup-emsdk@v13
+
+      - name: Verify
+        run: emcc -v
+
       - name: Build
         run: make -f Makefile.emscripten
+
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         # If you're changing the branch from main,
