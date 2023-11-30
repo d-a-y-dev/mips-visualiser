@@ -24,11 +24,7 @@ jobs:
         run: emcc -v
 
       - name: Setup SDL2 frameworks
-        uses: BrettDong/setup-sdl2-frameworks@v1
-        with:
-          sdl2: latest
-          sdl2-ttf: latest
-          sdl2-image: latest
+        run: sudo apt install libsdl2-dev libsdl2-2.0-0 libjpeg-dev libwebp-dev libtiff5-dev libsdl2-image-dev libsdl2-image-2.0-0 libfreetype6-dev libsdl2-ttf-dev libsdl2-ttf-2.0-0 -y;
 
       - name: Build
         run: make -f Makefile.emscripten
