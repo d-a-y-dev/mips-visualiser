@@ -23,7 +23,7 @@ SOURCES += gui/design.cpp gui/components.cpp shell.cpp sim.cpp
 OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
 UNAME_S := $(shell uname -s)
 
-CXXFLAGS = -std=c++2a -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends -I$(IMGUI_DIR)/../SDL2/include -Igui -L$(IMGUI_DIR)/../SDL2_ttf/lib -l SDL2_ttf-2.0.0 -L$(IMGUI_DIR)/../SDL2_image/lib -l SDL2_image-2.0.0 #-I$(IMGUI_DIR)/misc/cpp
+CXXFLAGS = -std=c++2a -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends -Igui -lSDL2_ttf #-I$(IMGUI_DIR)/misc/cpp
 CXXFLAGS += -g -Wall -Wformat
 LIBS =
 

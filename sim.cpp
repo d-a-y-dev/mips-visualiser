@@ -182,6 +182,7 @@ void reset_IDEX_pipeline()
     IDEX_REG.SpecialRegHi = LOW;
     IDEX_REG.SpecialRegLo = LOW;
     IDEX_REG.Syscall = LOW;
+    IDEX_REG.JUMPADDRESS = 0;
 }
 
 EXMEM_PIPELINE_REG EXMEM_REG = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW};
@@ -1308,7 +1309,7 @@ void execute()
             case JAL:
                 EXMEM_REG.ALURESULT = IDEX_REG.PCPLUS4;
             case J:
-                EXMEM_REG.JUMPADDRESS = (IDEX_REG.TARGET << 2);
+                //EXMEM_REG.JUMPADDRESS = (IDEX_REG.TARGET << 2);
                 break;
             case SPECIAL:
                 switch (IDEX_REG.FUNCT)
@@ -1316,7 +1317,7 @@ void execute()
                 // case JALR:
                 //     EXMEM_REG.ALURESULT = IDEX_REG.PCPLUS4;
                 case JR:
-                    EXMEM_REG.JUMPADDRESS = IDEX_REG.RSDATA;
+                    //EXMEM_REG.JUMPADDRESS = IDEX_REG.RSDATA;
                     break;
                 }
             }
@@ -1324,19 +1325,7 @@ void execute()
     }
 
 
-    if (IDEX_REG.Jump == HIGH)
-    {
-        DEBUG_PRINT("jumped\n");
-        CURRENT_STATE.PC = EXMEM_REG.JUMPADDRESS;
-        // SQUASH Decode and Fetch
-        // Reset Decode and Fetch
-        // RESET IFID
-        reset_IFID_pipeline();
-
-        // RESET CONTROL UNIT
-        reset_CONTROL();
-    }
-    else if (EXMEM_REG.BranchGate == HIGH)
+    if (EXMEM_REG.BranchGate == HIGH)
     {
         DEBUG_PRINT("branched\n");
         CURRENT_STATE.PC = EXMEM_REG.JUMPADDRESS;
@@ -1457,6 +1446,7 @@ void decode()
             DEBUG_PRINT("Jump\n");
             CONTROL.Jump = HIGH;
             IDEX_REG.TARGET = target(IR);
+            IDEX_REG.JUMPADDRESS = (IDEX_REG.TARGET << 2);
             break;
         case SPECIAL: // R-Type
             switch(specialOpCode) // This op code needs RegWrite
@@ -1527,6 +1517,7 @@ void decode()
                 case JR:
                     CONTROL.Jump = HIGH;
                     IDEX_REG.FUNCT = funct(IR);
+                    IDEX_REG.JUMPADDRESS = IDEX_REG.RSDATA;
                     break;
                 // case JALR:
                 //     CONTROL.Jump = HIGH;
@@ -1569,6 +1560,19 @@ void decode()
 
     // RESET CONTROL UNIT
     reset_CONTROL();
+
+    if (IDEX_REG.Jump == HIGH)
+    {
+        DEBUG_PRINT("jumped\n");
+        CURRENT_STATE.PC = IDEX_REG.JUMPADDRESS;
+        // SQUASH Decode and Fetch
+        // Reset Decode and Fetch
+        // RESET IFID
+        reset_IFID_pipeline();
+
+        // RESET CONTROL UNIT
+        reset_CONTROL();
+    }
 }
 
 void fetch()
