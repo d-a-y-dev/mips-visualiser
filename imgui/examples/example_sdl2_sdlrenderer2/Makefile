@@ -23,7 +23,7 @@ SOURCES += gui/design.cpp gui/components.cpp shell.cpp sim.cpp
 OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
 UNAME_S := $(shell uname -s)
 
-CXXFLAGS = -std=c++2a -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends -Igui -lSDL2_ttf #-I$(IMGUI_DIR)/misc/cpp
+CXXFLAGS = -std=c++2a -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends -Igui #-I$(IMGUI_DIR)/misc/cpp
 CXXFLAGS += -g -Wall -Wformat
 LIBS =
 
@@ -35,7 +35,7 @@ ifeq ($(UNAME_S), Linux) #LINUX
 	ECHO_MESSAGE = "Linux"
 	LIBS += -lGL -ldl `sdl2-config --libs`
 
-	CXXFLAGS += `sdl2-config --cflags`
+	CXXFLAGS += `sdl2-config --cflags` -lSDL2_ttf
 	CFLAGS = $(CXXFLAGS)
 endif
 
@@ -45,7 +45,7 @@ ifeq ($(UNAME_S), Darwin) #APPLE
 	LIBS += -L/usr/local/lib -L/opt/local/lib
 
 	CXXFLAGS += `sdl2-config --cflags`
-	CXXFLAGS += -I/usr/local/include -I/opt/local/include
+	CXXFLAGS += -I/usr/local/include -I/opt/local/include -I$(IMGUI_DIR)/../SDL2/include -Igui -L$(IMGUI_DIR)/../SDL2_ttf/lib -l SDL2_ttf-2.0.0 -L$(IMGUI_DIR)/../SDL2_image/lib -l SDL2_image-2.0.0
 	CFLAGS = $(CXXFLAGS)
 endif
 
