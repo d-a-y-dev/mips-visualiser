@@ -57,7 +57,7 @@ endif
 ## FINAL BUILD FLAGS
 ##---------------------------------------------------------------------
 
-CPPFLAGS += -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends -Igui
+CPPFLAGS += -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends -Igui -sUSE_SDL=2 -sUSE_SDL_TTF=2
 #CPPFLAGS += -g
 CPPFLAGS += -Wall -Wformat -Os $(EMS)
 LDFLAGS += --shell-file $(IMGUI_DIR)/libs/emscripten/shell_minimal.html
