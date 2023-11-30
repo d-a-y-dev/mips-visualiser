@@ -173,6 +173,7 @@ void reset_IDEX_pipeline()
     IDEX_REG.PCPLUS4 = 0;
     IDEX_REG.HI = 0;
     IDEX_REG.LO = 0;
+    // IDEX_REG.JUMPADDRESS = 0;
     IDEX_REG.RegDst = LOW;
     IDEX_REG.Jump = LOW;
     IDEX_REG.Branch = LOW;
@@ -776,7 +777,7 @@ void writeback()
     u32 ALURESULT = MEMWB_REG.ALURESULT;
     u32 ALURESULT2 = MEMWB_REG.ALURESULT2;
 
-    if (MEMWB_REG.Syscall == HIGH) { RUN_BIT = FALSE; return;}
+    if (MEMWB_REG.Syscall == HIGH) { RUN_BIT = FALSE; pipe_to_WROTE(); return;}
 
     if (MEMWB_REG.SpecialRegHi == HIGH && MEMWB_REG.SpecialRegLo == HIGH)
     {
@@ -799,20 +800,20 @@ void writeback()
         DEBUG_PRINT("Wrote %u to REG[%u]\n", ALURESULT, RD);
     }
 
-    // if (MEMWB_REG.Jump == HIGH)
-    // {
-    //     DEBUG_PRINT("jumped\n");
-    //     CURRENT_STATE.PC = MEMWB_REG.JUMPADDRESS;
-    // }
-    // else if (MEMWB_REG.BranchGate == HIGH)
-    // {
-    //     DEBUG_PRINT("branched\n");
-    //     CURRENT_STATE.PC = MEMWB_REG.JUMPADDRESS;
-    // }
-    // else
-    // {
-    //     // CURRENT_STATE.PC = CURRENT_STATE.PC + 4;
-    // }
+    if (MEMWB_REG.Jump == HIGH && DATA_FORWARD == false)
+    {
+        DEBUG_PRINT("jumped\n");
+        CURRENT_STATE.PC = MEMWB_REG.JUMPADDRESS;
+    }
+    else if (MEMWB_REG.BranchGate == HIGH)
+    {
+        DEBUG_PRINT("branched\n");
+        CURRENT_STATE.PC = MEMWB_REG.JUMPADDRESS;
+    }
+    else
+    {
+        // CURRENT_STATE.PC = CURRENT_STATE.PC + 4;
+    }
 
     // PIPE TO WROTE
     pipe_to_WROTE();
@@ -1092,7 +1093,7 @@ void execute()
             case JAL:
                 EXMEM_REG.ALURESULT = IDEX_REG.PCPLUS4;
             case J:
-                EXMEM_REG.JUMPADDRESS = (IDEX_REG.TARGET << 2);
+                if (DATA_FORWARD == false) {EXMEM_REG.JUMPADDRESS = (IDEX_REG.TARGET << 2);}
                 break;
             case SPECIAL:
                 switch (IDEX_REG.FUNCT)
@@ -1100,7 +1101,7 @@ void execute()
                 // case JALR:
                 //     EXMEM_REG.ALURESULT = IDEX_REG.PCPLUS4;
                 case JR:
-                    EXMEM_REG.JUMPADDRESS = IDEX_REG.RSDATA;
+                    if (DATA_FORWARD == false) {EXMEM_REG.JUMPADDRESS = IDEX_REG.RSDATA;}
                     break;
                 }
             }
@@ -1108,19 +1109,7 @@ void execute()
     }
 
 
-    if (IDEX_REG.Jump == HIGH)
-    {
-        DEBUG_PRINT("jumped\n");
-        CURRENT_STATE.PC = EXMEM_REG.JUMPADDRESS;
-        // SQUASH Decode and Fetch
-        // Reset Decode and Fetch
-        // RESET IFID
-        reset_IFID_pipeline();
-
-        // RESET CONTROL UNIT
-        reset_CONTROL();
-    }
-    else if (EXMEM_REG.BranchGate == HIGH)
+    if (EXMEM_REG.BranchGate == HIGH)
     {
         DEBUG_PRINT("branched\n");
         CURRENT_STATE.PC = EXMEM_REG.JUMPADDRESS;
@@ -1248,6 +1237,8 @@ void decode()
             DEBUG_PRINT("Jump\n");
             CONTROL.Jump = HIGH;
             IDEX_REG.TARGET = target(IR);
+
+            if (DATA_FORWARD == true) {CURRENT_STATE.PC = (IDEX_REG.TARGET << 2);}
             break;
         case SPECIAL: // R-Type
             switch(specialOpCode) // This op code needs RegWrite
@@ -1318,6 +1309,9 @@ void decode()
                 case JR:
                     CONTROL.Jump = HIGH;
                     IDEX_REG.FUNCT = funct(IR);
+
+                    // Jumped
+                    if (DATA_FORWARD == true) {CURRENT_STATE.PC = IDEX_REG.RSDATA;}
                     break;
                 // case JALR:
                 //     CONTROL.Jump = HIGH;
@@ -1350,7 +1344,6 @@ void decode()
                     break;
             }
     }
-
 
     // Stalling should be here
     // Pipe everything into IDEX register pipeline

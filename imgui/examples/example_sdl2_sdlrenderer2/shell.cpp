@@ -208,6 +208,7 @@ void go() {
   printf("Simulating...\n\n");
   while (RUN_BIT)
     cycle();
+  reset();
   printf("Simulator halted\n\n");
 }
 
@@ -465,22 +466,20 @@ void  initialize(std::string program_filename)
 // void run_shell(int argc, char *argv[])
 void run_shell(std::string instrs)
 {
+  Cycle_Instances.clear();
   FILE * dumpsim_file;
 
+  /* Error Checking */
+  /* Defaults to test */
   if (instrs.empty())
   {
     instrs = "0x2402000a 0x24080005 0x1088021 0x2409000a 0xc";
   }
 
-  /* Error Checking */
-  if (instrs.empty())
-  {
-    std::cout << "Error: usage incorrect" << std::endl;
-    exit(1);
-  }
-  // if (argc < 2) {
-  //   printf("Error: usage: %s <program_file_1> <program_file_2> ...\n",
-  //          argv[0]);
+  // /* Error Checking */
+  // if (instrs.empty())
+  // {
+  //   std::cout << "Error: usage incorrect" << std::endl;
   //   exit(1);
   // }
 
@@ -496,12 +495,6 @@ void run_shell(std::string instrs)
   go();
 
   rdump(dumpsim_file);
-
-  // while (1)
-  // {
-  //   get_command(dumpsim_file);
-  // }
-
 }
 
 #ifdef TEST_MODE
