@@ -23,6 +23,13 @@ jobs:
       - name: Verify
         run: emcc -v
 
+      - name: Setup SDL2 frameworks
+        uses: BrettDong/setup-sdl2-frameworks@v1
+        with:
+          sdl2: latest
+          sdl2-ttf: latest
+          sdl2-image: latest
+
       - name: Build
         run: make -f Makefile.emscripten
 
