@@ -29,6 +29,7 @@ typedef struct IDEX_PILELINE_REG
     uint32_t PCPLUS4; // PC + 4
     uint32_t HI;
     uint32_t LO;
+    uint32_t JUMPADDRESS;
     enum Signal RegDst;
     enum Signal Jump;
     enum Signal Branch;

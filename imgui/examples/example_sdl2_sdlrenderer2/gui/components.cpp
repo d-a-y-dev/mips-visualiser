@@ -1,6 +1,7 @@
 #include "SDL2/SDL.h"
 #include "components.h"
 #include <iostream>
+#include <vector>
 
 
 void draw_fetch_mux(SDL_Renderer* renderer, SDL_Color color)

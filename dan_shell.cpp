@@ -21,9 +21,6 @@
 #include <stdint.h>
 
 #include "shell.hpp"
-#include <string>
-#include <sstream>
-#include <iostream>
 
 /***************************************************************/
 /* Main memory.                                                */
@@ -63,7 +60,6 @@ mem_region_t MEM_REGIONS[] = {
 CPU_State CURRENT_STATE, NEXT_STATE;
 int RUN_BIT;	/* run bit */
 int INSTRUCTION_COUNT;
-std::string OUTPUT;
 
 /***************************************************************/
 /*                                                             */
@@ -75,7 +71,9 @@ std::string OUTPUT;
 uint32_t mem_read_32(uint32_t address)
 {
     int i;
+    //loop over number of regions in memory
     for (i = 0; i < MEM_NREGIONS; i++) {
+        //condition to check if the address is in region i then read from that region
         if (address >= MEM_REGIONS[i].start &&
                 address < (MEM_REGIONS[i].start + MEM_REGIONS[i].size)) {
             uint32_t offset = address - MEM_REGIONS[i].start;
@@ -134,7 +132,7 @@ void mem_write_32(uint32_t address, uint32_t value)
 /* Purpose   : Print out a list of commands                    */
 /*                                                             */
 /***************************************************************/
-void help() {
+void help() {                                                    
   printf("----------------MIPS ISIM Help------------------------\n");
   printf("go                    - run program to completion     \n");
   printf("run n                 - execute program for n instrs  \n");
@@ -154,10 +152,9 @@ void help() {
 /* Purpose   : Execute a cycle                                 */
 /*                                                             */
 /***************************************************************/
-void cycle() {
+void cycle() {                                                
 
   process_instruction();
-  // CURRENT_STATE = NEXT_STATE;
   INSTRUCTION_COUNT++;
 
   if (INSTRUCTION_COUNT >= 5000)
@@ -174,7 +171,7 @@ void cycle() {
 /* Purpose   : Simulate MIPS for n cycles                      */
 /*                                                             */
 /***************************************************************/
-void run(int num_cycles) {
+void run(int num_cycles) {                                      
   int i;
 
   if (RUN_BIT == FALSE) {
@@ -199,7 +196,7 @@ void run(int num_cycles) {
 /* Purpose   : Simulate MIPS until HALTed                      */
 /*                                                             */
 /***************************************************************/
-void go() {
+void go() {                                                     
   if (RUN_BIT == FALSE) {
     printf("Can't simulate, Simulator is halted\n\n");
     return;
@@ -208,11 +205,10 @@ void go() {
   printf("Simulating...\n\n");
   while (RUN_BIT)
     cycle();
-  reset();
   printf("Simulator halted\n\n");
 }
 
-/***************************************************************/
+/***************************************************************/ 
 /*                                                             */
 /* Procedure : mdump                                           */
 /*                                                             */
@@ -220,7 +216,7 @@ void go() {
 /*             output file.                                    */
 /*                                                             */
 /***************************************************************/
-void mdump(FILE * dumpsim_file, int start, int stop) {
+void mdump(FILE * dumpsim_file, int start, int stop) {          
   int address;
 
   printf("\nMemory content [0x%08x..0x%08x] :\n", start, stop);
@@ -241,15 +237,12 @@ void mdump(FILE * dumpsim_file, int start, int stop) {
 /*                                                             */
 /* Procedure : rdump                                           */
 /*                                                             */
-/* Purpose   : Dump current register and bus values to the     */
+/* Purpose   : Dump current register and bus values to the     */   
 /*             output file.                                    */
 /*                                                             */
 /***************************************************************/
-void rdump(FILE * dumpsim_file) {
-  int k;
-
-  OUTPUT = "";
-  std::stringstream ss;
+void rdump(FILE * dumpsim_file) {                               
+  int k; 
 
   printf("\nCurrent register/bus values :\n");
   printf("-------------------------------------\n");
@@ -257,11 +250,7 @@ void rdump(FILE * dumpsim_file) {
   printf("PC                : 0x%08x\n", CURRENT_STATE.PC);
   printf("Registers:\n");
   for (k = 0; k < MIPS_REGS; k++)
-  {
     printf("R%d: 0x%08x\n", k, CURRENT_STATE.REGS[k]);
-    ss << "R" << k << ": 0x" << CURRENT_STATE.REGS[k] << std::endl;
-  }
-  OUTPUT = ss.str();
   printf("HI: 0x%08x\n", CURRENT_STATE.HI);
   printf("LO: 0x%08x\n", CURRENT_STATE.LO);
   printf("\n");
@@ -283,10 +272,10 @@ void rdump(FILE * dumpsim_file) {
 /*                                                             */
 /* Procedure : get_command                                     */
 /*                                                             */
-/* Purpose   : Read a command from standard input.             */
+/* Purpose   : Read a command from standard input.             */  
 /*                                                             */
 /***************************************************************/
-void get_command(FILE * dumpsim_file) {
+void get_command(FILE * dumpsim_file) {                         
   char buffer[20];
   int start, stop, cycles;
   int register_no, register_value;
@@ -339,15 +328,15 @@ void get_command(FILE * dumpsim_file) {
    CURRENT_STATE.REGS[register_no] = register_value;
    NEXT_STATE.REGS[register_no] = register_value;
    break;
-
+  
   case 'H':
   case 'h':
    if (scanf("%i", &hi_reg_value) != 1)
       break;
-   CURRENT_STATE.HI = hi_reg_value;
-   NEXT_STATE.HI = hi_reg_value;
+   CURRENT_STATE.HI = hi_reg_value; 
+   NEXT_STATE.HI = hi_reg_value; 
    break;
-
+  
   case 'L':
   case 'l':
    if (scanf("%i", &lo_reg_value) != 1)
@@ -369,7 +358,7 @@ void get_command(FILE * dumpsim_file) {
 /* Purpose   : Allocate and zero memoryy                       */
 /*                                                             */
 /***************************************************************/
-void init_memory() {
+void init_memory() {                                           
     int i;
     for (i = 0; i < MEM_NREGIONS; i++) {
         MEM_REGIONS[i].mem = (uint8_t*) malloc(MEM_REGIONS[i].size);
@@ -393,21 +382,21 @@ void init_memory() {
   ((byte) & 0x08 ? '1' : '0'), \
   ((byte) & 0x04 ? '1' : '0'), \
   ((byte) & 0x02 ? '1' : '0'), \
-  ((byte) & 0x01 ? '1' : '0')
+  ((byte) & 0x01 ? '1' : '0') 
 
-void load_program(std::string program_filename) {
+void load_program(char *program_filename) {                   
   FILE * prog;
   int ii, word;
   char* wordd;
 
   /* Open program file. */
-  prog = fmemopen((void *)program_filename.data(), strlen(program_filename.data()), "r");
+  prog = fopen(program_filename, "r");
   if (prog == NULL) {
-    printf("Error: Can't open program file %s\n", program_filename.data());
+    printf("Error: Can't open program file %s\n", program_filename);
     exit(-1);
   }
 
-  printf("Opened: %s\n", program_filename.data());
+  printf("Opened: %s\n", program_filename);
 
   /* Read in the program. */
 
@@ -417,13 +406,13 @@ void load_program(std::string program_filename) {
     mem_write_32(MEM_TEXT_START + ii, word);
     ii += 4;
     // printf("got:"
-    //   BYTE_TO_BINARY_PATTERN " "
-    //   BYTE_TO_BINARY_PATTERN " "
-    //   BYTE_TO_BINARY_PATTERN " "
-    //   BYTE_TO_BINARY_PATTERN " : %x\n",
-    //   BYTE_TO_BINARY(word>>24),
-    //   BYTE_TO_BINARY(word>>16),
-    //   BYTE_TO_BINARY(word>>8),
+    //   BYTE_TO_BINARY_PATTERN " " 
+    //   BYTE_TO_BINARY_PATTERN " " 
+    //   BYTE_TO_BINARY_PATTERN " " 
+    //   BYTE_TO_BINARY_PATTERN " : %x\n", 
+    //   BYTE_TO_BINARY(word>>24), 
+    //   BYTE_TO_BINARY(word>>16), 
+    //   BYTE_TO_BINARY(word>>8), 
     //   BYTE_TO_BINARY(word),
     //   word);
   }
@@ -437,21 +426,22 @@ void load_program(std::string program_filename) {
 /*                                                          */
 /* Procedure : initialize                                   */
 /*                                                          */
-/* Purpose   : Load machine language program                */
+/* Purpose   : Load machine language program                */ 
 /*             and set up initial state of the machine.     */
 /*                                                          */
 /************************************************************/
-void  initialize(std::string program_filename)
-{
+void initialize(char *program_filename, int num_prog_files) 
+{ 
   int i;
 
   init_memory();
-  // for ( i = 0; i < num_prog_files; i++ ) {
-  load_program(program_filename);
-    // while(*program_filename++ != '\0');
-  // }
+  //init_dram(8, 8, 1024, 1024);
+  for ( i = 0; i < num_prog_files; i++ ) {
+    load_program(program_filename);
+    while(*program_filename++ != '\0');
+  }
   NEXT_STATE = CURRENT_STATE;
-
+    
   RUN_BIT = TRUE;
 }
 
@@ -459,42 +449,32 @@ void  initialize(std::string program_filename)
 /*                                                             */
 /* Procedure : main                                            */
 /*                                                             */
-/* Purpose : turned main to run with raw                       */
-/*           instruction string                                */
-/*                                                             */
 /***************************************************************/
-// void run_shell(int argc, char *argv[])
-void run_shell(std::string instrs)
+void run_shell(int argc, char *argv[])
 {
-  Cycle_Instances.clear();
   FILE * dumpsim_file;
 
   /* Error Checking */
-  /* Defaults to test */
-  if (instrs.empty())
-  {
-    instrs = "0x2402000a 0x24080005 0x1088021 0x2409000a 0xc";
+  if (argc < 2) {
+    printf("Error: usage: %s <program_file_1> <program_file_2> ...\n",
+           argv[0]);
+    exit(1);
   }
-
-  // /* Error Checking */
-  // if (instrs.empty())
-  // {
-  //   std::cout << "Error: usage incorrect" << std::endl;
-  //   exit(1);
-  // }
 
   printf("MIPS Simulator\n\n");
 
-  initialize(instrs);
+  initialize(argv[1], argc - 1);
 
   if ( (dumpsim_file = fopen( "dumpsim", "w" )) == NULL ) {
     printf("Error: Can't open dumpsim file\n");
     exit(-1);
   }
 
-  go();
+  while (1)
+  {
+    get_command(dumpsim_file);
+  }
 
-  rdump(dumpsim_file);
 }
 
 #ifdef TEST_MODE
@@ -652,7 +632,7 @@ int test_lw()
   test_file("lw");
   uint32_t r8 = CURRENT_STATE.REGS[8]; // $t0
 
-  if (r8==0)
+  if (r8==0) 
   {
     return 0;
   }
@@ -736,10 +716,10 @@ int test_addi()
 
 void test()
 {
-  reset();
   int count = 0;
   for (int i=0; i<52; i++)
   {
+    reset();
     int res = 0;
     // overload some tests (sorry), these ones kinda need to work
     switch(i)
@@ -779,13 +759,6 @@ void test()
   }
 
   printf("[ Correct ]: %d\n", count);
-  // for (int i=0; i<52; i++)
-  // {
-  //   if (results[i]==1)
-  //   {
-  //     printf("%s\n", instructions[i]);
-  //   }
-  // }
   printf("[ Incorrect ]: \n");
   for (int i=0; i<52; i++)
   {
@@ -797,10 +770,10 @@ void test()
 }
 #endif
 
-// int main(int argc, char *argv[]) {
-// #ifndef TEST_MODE
-//   run_shell("");
-// #else
-//   test();
-// #endif
-// }
+int main(int argc, char *argv[]) {                              
+#ifndef TEST_MODE
+  run_shell(argc, argv);
+#else
+  test();
+#endif
+}

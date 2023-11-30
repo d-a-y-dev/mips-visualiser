@@ -132,8 +132,8 @@ static void mainloop()
             done = true;
         if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window))
             done = true;
-        if (event.type == SDL_MOUSEBUTTONDOWN)
-            handleButtonClick(event);
+        // if (event.type == SDL_MOUSEBUTTONDOWN)
+            // handleButtonClick(event);
     }
 
 
@@ -179,6 +179,7 @@ static void mainloop()
         if (ImGui::Button("Run"))// Buttons return true when clicked (most widgets return true when edited/activated)
         {
             Cycle_Instances.clear();
+            counter = 0;
             std::cout << text << std::endl;
             run_shell(text);
         }
@@ -242,9 +243,11 @@ static void mainloop()
                 ImGui::EndGroup();
             }
 
-            ImGui::Text("ALUOp: %d  ALUSrc: %d  Jump: %d  RegWrite: %d", Cycle_Instances[counter].IDEX_Reg.ALUOp, Cycle_Instances[counter].IDEX_Reg.ALUSrc, Cycle_Instances[counter].IDEX_Reg.Jump, Cycle_Instances[counter].IDEX_Reg.RegWrite);
+            ImGui::Text("IDEX - ALUOp: %d  ALUSrc: %d  Jump: %d  RegWrite: %d  Syscall: %d", Cycle_Instances[counter].IDEX_Reg.ALUOp, Cycle_Instances[counter].IDEX_Reg.ALUSrc, Cycle_Instances[counter].IDEX_Reg.Jump, Cycle_Instances[counter].IDEX_Reg.RegWrite, Cycle_Instances[counter].IDEX_Reg.Syscall);
+            ImGui::Text("EXMEM - Jump: %d  RegWrite: %d  Syscall: %d",Cycle_Instances[counter].EXMEM_Reg.Jump, Cycle_Instances[counter].EXMEM_Reg.RegWrite, Cycle_Instances[counter].EXMEM_Reg.Syscall);
+            ImGui::Text("MEMWB - Jump: %d  RegWrite: %d  Syscall: %d",Cycle_Instances[counter].MEMWB_Reg.Jump, Cycle_Instances[counter].MEMWB_Reg.RegWrite, Cycle_Instances[counter].MEMWB_Reg.Syscall);
+            ImGui::Text("Writeback - Jump: %d  RegWrite: %d  Syscall: %d", Cycle_Instances[counter].WROTE_Reg.Jump, Cycle_Instances[counter].WROTE_Reg.RegWrite, Cycle_Instances[counter].WROTE_Reg.Syscall);
             ImGui::Text("STALL-F: %d  STALL-D: %d", Cycle_Instances[counter].Stall_Unit.Fetch, Cycle_Instances[counter].Stall_Unit.Decode);
-            ImGui::Text("RegDst: %d  Syscall: %d  RegDst: %d  Syscall: %d", Cycle_Instances[counter].MEMWB_Reg.RegDst, Cycle_Instances[counter].MEMWB_Reg.Syscall, Cycle_Instances[counter].WROTE_Reg.RegDst, Cycle_Instances[counter].WROTE_Reg.Syscall);
         }
 
 

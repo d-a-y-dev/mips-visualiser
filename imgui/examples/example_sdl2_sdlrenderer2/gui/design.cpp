@@ -74,8 +74,17 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer, int curr
     draw_line_register_files_to_mux_to_alu_1(renderer, black);
     draw_line_register_files_to_mux_to_alu_2(renderer, black);
 
-    if ((currentCycle-1 >= 0) && (currentCycle < Cycle_Instances.size() - 3) &&
-    Cycle_Instances[currentCycle-1].Stall_Unit.Fetch == 0
+    if
+    (
+        (currentCycle-1 >= 0) && (currentCycle < Cycle_Instances.size() - 3)
+        // Check if no ops
+        &&
+        !(Cycle_Instances[currentCycle].IDEX_Reg.ALUOp == 0 &&
+        Cycle_Instances[currentCycle].IDEX_Reg.ALUSrc == 0 &&
+        Cycle_Instances[currentCycle].IDEX_Reg.Jump == 0 &&
+        Cycle_Instances[currentCycle].IDEX_Reg.RegWrite == 0 &&
+        Cycle_Instances[currentCycle].IDEX_Reg.Syscall == 0
+        )
     )
     {
         draw_decode_decoder(renderer, blue);
@@ -94,8 +103,16 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer, int curr
             }
             else
             {
-                draw_line_decoder_to_mux_sel(renderer, blue);
-                draw_line_decoder_to_mux_imm(renderer, blue);
+                if (DATA_FORWARD == false)
+                {
+                    draw_line_decoder_to_mux_to_alu_sel(renderer, blue);
+                    draw_line_decoder_to_mux_to_alu_imm(renderer, blue);
+                }
+                else
+                {
+                    draw_line_decoder_to_mux_sel(renderer, blue);
+                    draw_line_decoder_to_mux_imm(renderer, blue);
+                }
             }
         }
 
@@ -133,8 +150,9 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer, int curr
     draw_line_alu_to_mux_to_pc_1(renderer, black);
 
     if (currentCycle-2 >= 0 && (currentCycle < Cycle_Instances.size() - 2) &&
-    (Cycle_Instances[currentCycle-1].Stall_Unit.Decode == 0 && Cycle_Instances[currentCycle-2].Stall_Unit.Decode == 0 ) &&
-    (Cycle_Instances[currentCycle-1].Stall_Unit.Fetch == 0 && Cycle_Instances[currentCycle-2].Stall_Unit.Fetch == 0 )
+    (Cycle_Instances[currentCycle-1].Stall_Unit.Decode == 0 && Cycle_Instances[currentCycle-2].Stall_Unit.Decode == 0 )
+    // check no ops
+    && !(Cycle_Instances[currentCycle].EXMEM_Reg.Jump == 0 && Cycle_Instances[currentCycle].EXMEM_Reg.RegWrite == 0 && Cycle_Instances[currentCycle].EXMEM_Reg.Syscall == 0)
     )
     {
         EXMEM_PIPELINE_REG exmem_regs = Cycle_Instances[currentCycle].EXMEM_Reg;
@@ -142,6 +160,11 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer, int curr
         if (exmem_regs.Jump == LOW)
         {
             draw_execute_alu(renderer, green);
+        }
+        else if (exmem_regs.Jump == HIGH && DATA_FORWARD == false)
+        {
+            draw_execute_alu(renderer, green);
+            draw_line_alu_to_mux_to_pc_1(renderer, green);
         }
 
         std::stringstream ss;
@@ -173,25 +196,39 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer, int curr
     draw_line_main_memory_to_mux_to_pc(renderer, black);
     draw_line_alu_to_mux_to_pc_2(renderer, black);
 
-    if ((currentCycle-1 >= 0) && (currentCycle < Cycle_Instances.size() - 3))
+    if ((currentCycle-1 >= 0) && (currentCycle < Cycle_Instances.size() - 3)
+    && // Check if no ops
+    !(Cycle_Instances[currentCycle].IDEX_Reg.ALUOp == 0 &&
+    Cycle_Instances[currentCycle].IDEX_Reg.ALUSrc == 0 &&
+    Cycle_Instances[currentCycle].IDEX_Reg.Jump == 0 &&
+    Cycle_Instances[currentCycle].IDEX_Reg.RegWrite == 0 &&
+    Cycle_Instances[currentCycle].IDEX_Reg.Syscall == 0)
+    )
     {
         draw_memory_main_memory(renderer, blue);
         draw_line_main_memory_to_decoder(renderer, blue);
     }
 
     if (currentCycle - 3 >= 0  && (currentCycle < Cycle_Instances.size() - 1) &&
-    (Cycle_Instances[currentCycle-2].Stall_Unit.Decode == 0 && Cycle_Instances[currentCycle-3].Stall_Unit.Decode == 0 )&&
-    (Cycle_Instances[currentCycle-2].Stall_Unit.Fetch == 0 && Cycle_Instances[currentCycle-3].Stall_Unit.Fetch == 0 )
+    (Cycle_Instances[currentCycle-2].Stall_Unit.Decode == 0 && Cycle_Instances[currentCycle-3].Stall_Unit.Decode == 0 )
+    // Check no ops
+    && !(Cycle_Instances[currentCycle].MEMWB_Reg.Jump == 0 && Cycle_Instances[currentCycle].MEMWB_Reg.RegWrite == 0 && Cycle_Instances[currentCycle].MEMWB_Reg.Syscall == 0)
     )
     {
-        std::stringstream ss;
-        ss << std::hex << Cycle_Instances[currentCycle-3].CPU_State.PC - 4;
-        renderText(ss.str().c_str(), 860, 440, textColor);
-
         MEMWB_PIPELINE_REG memwb_regs = Cycle_Instances[currentCycle].MEMWB_Reg;
 
         if (memwb_regs.RegDst == HIGH || memwb_regs.Syscall == HIGH)
         {
+            std::stringstream ss;
+            ss << std::hex << Cycle_Instances[currentCycle-3].CPU_State.PC - 4;
+            renderText(ss.str().c_str(), 860, 440, textColor);
+            draw_line_alu_to_mux_to_pc_2(renderer, green);
+        }
+        else if (memwb_regs.Jump == HIGH && DATA_FORWARD == false)
+        {
+            std::stringstream ss;
+            ss << std::hex << Cycle_Instances[currentCycle-3].CPU_State.PC - 4;
+            renderText(ss.str().c_str(), 860, 440, textColor);
             draw_line_alu_to_mux_to_pc_2(renderer, green);
         }
     }
@@ -203,11 +240,11 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer, int curr
     draw_decode_mux_to_fetch(renderer, black);
     draw_line_mux_to_mux(renderer, black);
 
-    if (currentCycle - 4 >= 0)
+    if (currentCycle - 4 >= 0 && currentCycle != Cycle_Instances.size())
     {
         WROTE_BACK wrote_regs = Cycle_Instances[currentCycle].WROTE_Reg;
 
-        if (wrote_regs.RegDst == HIGH || wrote_regs.Syscall == HIGH)
+        if (wrote_regs.RegWrite == HIGH || wrote_regs.Syscall == HIGH || (wrote_regs.Jump == HIGH && DATA_FORWARD == FALSE))
         {
             std::stringstream ss;
             ss << std::hex << Cycle_Instances[currentCycle-4].CPU_State.PC - 4;
