@@ -384,16 +384,16 @@ void draw_line_alu_to_main_memory_data(SDL_Renderer* renderer, SDL_Color color)
 
 
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-    SDL_RenderDrawLine(renderer,660,330,660,212);
-    SDL_RenderDrawLine(renderer,661,330,661,212);
-    SDL_RenderDrawLine(renderer,662,330,662,212);
+    SDL_RenderDrawLine(renderer,660,340,660,209);
+    SDL_RenderDrawLine(renderer,661,340,661,209);
+    SDL_RenderDrawLine(renderer,662,340,662,209);
 
 
     const std::vector< SDL_Vertex > AluToMemoryData =
     {
-        { SDL_FPoint{ 828, 201 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
-        { SDL_FPoint{ 843, 208 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
-        { SDL_FPoint{ 829, 214 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 828, 199 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 842, 209 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 828, 219 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
     };
     SDL_RenderGeometry( renderer, nullptr, AluToMemoryData.data(), AluToMemoryData.size(), nullptr, 0 );
     return;
@@ -413,15 +413,15 @@ void draw_line_alu_to_main_memory_address(SDL_Renderer* renderer, SDL_Color colo
     SDL_RenderDrawLine(renderer,784,359,784,225);
 
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+    SDL_RenderDrawLine(renderer,783,224,841,224);
+    SDL_RenderDrawLine(renderer,783,225,841,225);
     SDL_RenderDrawLine(renderer,783,226,841,226);
-    SDL_RenderDrawLine(renderer,783,227,841,227);
-    SDL_RenderDrawLine(renderer,783,228,841,228);
 
     const std::vector< SDL_Vertex > aluToMemoryAddress =
     {
-        { SDL_FPoint{ 827, 217 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
-        { SDL_FPoint{ 843, 225 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
-        { SDL_FPoint{ 830, 236 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 827, 215 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 842, 225 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 827, 235 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
     };
     SDL_RenderGeometry( renderer, nullptr, aluToMemoryAddress.data(), aluToMemoryAddress.size(), nullptr, 0 );
     return;
