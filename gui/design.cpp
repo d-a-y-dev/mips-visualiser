@@ -43,6 +43,7 @@ void renderMIPSArchitecture(SDL_Window* window, SDL_Renderer* renderer, int curr
     draw_fetch_pc(renderer, black);
     draw_line_pc_to_main_memory(renderer, black);
     draw_line_mux_to_pc(renderer, black);
+    draw_line_pc_plus_4(renderer, black);
 
     if (!Cycle_Instances.empty() && (currentCycle < Cycle_Instances.size() - 4))
     {

@@ -648,3 +648,19 @@ void draw_line_decoder_to_mux_to_pc(SDL_Renderer* renderer, SDL_Color color)
     SDL_RenderGeometry( renderer, nullptr, decodeToDecodeMuxArrow.data(), decodeToDecodeMuxArrow.size(), nullptr, 0 );
 }
 
+void draw_line_pc_plus_4(SDL_Renderer* renderer, SDL_Color color) 
+{
+    // Draw line form Pc+4 to PC mux
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a); // Black
+    SDL_RenderDrawLine(renderer, 64, 388, 64, 330);
+    SDL_RenderDrawLine(renderer, 65, 388, 65, 330);
+    SDL_RenderDrawLine(renderer, 66, 388, 66, 330);
+
+    const std::vector< SDL_Vertex > pcPlus4Arrow =
+    {
+        { SDL_FPoint{ 65, 325 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 55, 340 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 75, 340 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
+    };
+    SDL_RenderGeometry( renderer, nullptr, pcPlus4Arrow.data(), pcPlus4Arrow.size(), nullptr, 0 );
+}
