@@ -171,16 +171,16 @@ void draw_line_main_memory_to_decoder(SDL_Renderer* renderer, SDL_Color color)
     SDL_RenderDrawLine(renderer,390,188,843,188);
 
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-    SDL_RenderDrawLine(renderer,390,186,390,360);
-    SDL_RenderDrawLine(renderer,390,187,390,361);
-    SDL_RenderDrawLine(renderer,390,188,390,362);
+    SDL_RenderDrawLine(renderer,389,187,389,362);
+    SDL_RenderDrawLine(renderer,390,187,390,362);
+    SDL_RenderDrawLine(renderer,391,187,391,362);
 
 
     const std::vector< SDL_Vertex > memoryToDeocdeArrow =
     {
-        { SDL_FPoint{ 382, 345 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
-        { SDL_FPoint{ 398, 343 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
-        { SDL_FPoint{ 391, 359 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 380, 343 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 400, 343 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 390, 360 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
     };
     SDL_RenderGeometry( renderer, nullptr, memoryToDeocdeArrow.data(), memoryToDeocdeArrow.size(), nullptr, 0 );
 }
@@ -449,9 +449,9 @@ void draw_line_alu_to_mux_to_pc_3(SDL_Renderer* renderer, SDL_Color color)
 {
     // alu to decodeMux Data
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-    SDL_RenderDrawLine(renderer,1020,422,1098,422);
-    SDL_RenderDrawLine(renderer,1020,423,1098,423);
-    SDL_RenderDrawLine(renderer,1020,424,1098,424);
+    SDL_RenderDrawLine(renderer,1020,422,1099,422);
+    SDL_RenderDrawLine(renderer,1020,423,1099,423);
+    SDL_RenderDrawLine(renderer,1020,424,1099,424);
 
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
     SDL_RenderDrawLine(renderer,1098,424,1098,669);
@@ -459,16 +459,16 @@ void draw_line_alu_to_mux_to_pc_3(SDL_Renderer* renderer, SDL_Color color)
     SDL_RenderDrawLine(renderer,1100,424,1100,669);
 
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-    SDL_RenderDrawLine(renderer,486,668,1097,668);
-    SDL_RenderDrawLine(renderer,486,669,1097,669);
-    SDL_RenderDrawLine(renderer,486,670,1097,670);
+    SDL_RenderDrawLine(renderer,486,668,1099,668);
+    SDL_RenderDrawLine(renderer,486,669,1099,669);
+    SDL_RenderDrawLine(renderer,486,670,1099,670);
 
 
     const std::vector< SDL_Vertex > aluToDecodeMuxData =
     {
-        { SDL_FPoint{ 502, 662 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
-        { SDL_FPoint{ 486, 668 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
-        { SDL_FPoint{ 502, 676 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 502, 659 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 484, 669 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 502, 679 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
     };
     SDL_RenderGeometry( renderer, nullptr, aluToDecodeMuxData.data(), aluToDecodeMuxData.size(), nullptr, 0 );
 }
@@ -477,14 +477,14 @@ void draw_line_main_memory_to_mux_to_pc(SDL_Renderer* renderer, SDL_Color color)
 {
     // memory to decodeMux
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-    SDL_RenderDrawLine(renderer,995,231,1153,229);
-    SDL_RenderDrawLine(renderer,995,232,1153,230);
-    SDL_RenderDrawLine(renderer,995,233,1153,231);
+    SDL_RenderDrawLine(renderer,995,231,1153,231);
+    SDL_RenderDrawLine(renderer,995,232,1153,232);
+    SDL_RenderDrawLine(renderer,995,233,1153,233);
 
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-    SDL_RenderDrawLine(renderer,1152,232,1152,689);
-    SDL_RenderDrawLine(renderer,1153,232,1153,689);
-    SDL_RenderDrawLine(renderer,1154,232,1154,689);
+    SDL_RenderDrawLine(renderer,1152,232,1152,687);
+    SDL_RenderDrawLine(renderer,1153,232,1153,687);
+    SDL_RenderDrawLine(renderer,1154,232,1154,687);
 
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
     SDL_RenderDrawLine(renderer,486,686,1152,686);
@@ -493,9 +493,9 @@ void draw_line_main_memory_to_mux_to_pc(SDL_Renderer* renderer, SDL_Color color)
 
     const std::vector< SDL_Vertex > memoryToDecodeMux =
     {
-        { SDL_FPoint{ 503, 680 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
-        { SDL_FPoint{ 486, 687 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
-        { SDL_FPoint{ 504, 695 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 504, 677 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 484, 687 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 504, 697 }, SDL_Color{ color.r, color.g, color.b, color.a }, SDL_FPoint{ 0 }, },
     };
     SDL_RenderGeometry( renderer, nullptr, memoryToDecodeMux.data(), memoryToDecodeMux.size(), nullptr, 0 );
 }
