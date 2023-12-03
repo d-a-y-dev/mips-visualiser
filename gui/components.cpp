@@ -20,7 +20,7 @@ void draw_fetch_mux(SDL_Renderer* renderer, SDL_Color color)
     // Draw PC mux right
     const std::vector< SDL_Vertex > right_pc =
     {
-        { SDL_FPoint{ 200, 290 }, color, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 198, 291 }, color, SDL_FPoint{ 0 }, },
         { SDL_FPoint{ 180, 325 }, color, SDL_FPoint{ 0 }, },
         { SDL_FPoint{ 210, 325 }, color, SDL_FPoint{ 0 }, },
     };
@@ -62,7 +62,7 @@ void draw_decode_mux_to_alu(SDL_Renderer* renderer, SDL_Color color)
     };
     SDL_RenderGeometry( renderer, nullptr, left_mux_execute.data(), left_mux_execute.size(), nullptr, 0 );
      // Draw execute mux
-    SDL_Rect executeRect = {560, 360, 27, 83};
+    SDL_Rect executeRect = {560, 360, 30, 80};
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a); // Blue
     SDL_RenderFillRect(renderer, &executeRect);
     // Draw mux execute down
@@ -80,21 +80,21 @@ void draw_decode_mux_to_fetch(SDL_Renderer* renderer, SDL_Color color) {
     // Draw mux execute top
     const std::vector< SDL_Vertex > left_mux_decode =
     {
-        { SDL_FPoint{ 485, 625 }, color, SDL_FPoint{ 0 }, },
         { SDL_FPoint{ 450, 650 }, color, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 485, 625 }, color, SDL_FPoint{ 0 }, },
         { SDL_FPoint{ 485, 650 }, color, SDL_FPoint{ 0 }, },
     };
     SDL_RenderGeometry( renderer, nullptr, left_mux_decode.data(), left_mux_decode.size(), nullptr, 0 );
      // Draw decode mux
-    SDL_Rect decodeMuxRect = {450, 648, 35, 40};
+    SDL_Rect decodeMuxRect = {450, 650, 35, 40};
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a); // Blue
     SDL_RenderFillRect(renderer, &decodeMuxRect);
     // Draw mux decode down
     const std::vector< SDL_Vertex > right_mux_decode =
     {
         { SDL_FPoint{ 450, 690 }, color, SDL_FPoint{ 0 }, },
-        { SDL_FPoint{ 485, 650 }, color, SDL_FPoint{ 0 }, },
-        { SDL_FPoint{ 485, 710 }, color, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 485, 690 }, color, SDL_FPoint{ 0 }, },
+        { SDL_FPoint{ 485, 715 }, color, SDL_FPoint{ 0 }, },
     };
     SDL_RenderGeometry( renderer, nullptr, right_mux_decode.data(), right_mux_decode.size(), nullptr, 0 );
     return;
