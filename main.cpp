@@ -12,10 +12,12 @@
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
+#include "emscripten_browser_clipboard.h"
 #endif
 #include "imgui.h"
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_sdlrenderer2.h"
+#include "imgui_stdlib.h"
 #include "gui/design.h"
 #include "shell.hpp"
 // #include "pipeline.h"
@@ -23,6 +25,9 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <iostream>
+#include <chrono>
+#include <thread>
+#include <iomanip>
 
 #if !SDL_VERSION_ATLEAST(2,0,17)
 #error This backend requires SDL 2.0.17+ because of SDL_RenderGeometry() function
@@ -34,7 +39,7 @@ void log(Args&& ... args)
     (std::cout << ... << std::forward<Args>(args));
 }
 
-// std::vector<Cycle_Instance> Cycle_Instances
+int DESIRED_FPS = 30;
 
 SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
@@ -53,6 +58,30 @@ ImGuiIO* io = nullptr;
 
 SDL_Surface* background_surface = NULL;
 SDL_Texture* background_texture = NULL;
+
+std::chrono::system_clock::time_point a = std::chrono::system_clock::now();
+std::chrono::system_clock::time_point b = std::chrono::system_clock::now();
+
+static std::string text{""};
+static std::string clipboard_content;
+static bool simulatedImguiPaste = false;
+
+#ifdef __EMSCRIPTEN__
+
+char const *get_clipboard_for_imgui(void *user_data [[maybe_unused]]) {
+  /// Callback for imgui, to return clipboard content
+  std::cout << "ImGui requested clipboard content, returning " << std::quoted(clipboard_content) << std::endl;
+  return clipboard_content.c_str();
+}
+
+void set_clipboard_from_imgui(void *user_data [[maybe_unused]], char const *text) {
+  /// Callback for imgui, to set clipboard content
+  clipboard_content = text;
+  std::cout << "ImGui setting clipboard content to " << std::quoted(clipboard_content) << std::endl;
+  emscripten_browser_clipboard::copy(clipboard_content);
+}
+
+#endif
 
 void renderText(const char* text, int x, int y, SDL_Color textColor) {
     SDL_Surface* textSurface = TTF_RenderText_Solid(font, text, textColor);
@@ -124,6 +153,12 @@ static void mainloop()
     // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application, or clear/overwrite your copy of the mouse data.
     // - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application, or clear/overwrite your copy of the keyboard data.
     // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
+    if (simulatedImguiPaste) {
+		simulatedImguiPaste = false;
+		ImGui::GetIO().AddKeyEvent(ImGuiKey_ModCtrl, false);
+		ImGui::GetIO().AddKeyEvent(ImGuiKey_V, false);
+	}
+
     SDL_Event event;
     while (SDL_PollEvent(&event))
     {
@@ -135,6 +170,22 @@ static void mainloop()
         // if (event.type == SDL_MOUSEBUTTONDOWN)
             // handleButtonClick(event);
     }
+
+    int ms = 1000/DESIRED_FPS;
+
+    // Maintain designated frequency of 5 Hz (200 ms per frame)
+    a = std::chrono::system_clock::now();
+    std::chrono::duration<double, std::milli> work_time = a - b;
+
+    if (work_time.count() < ms)
+    {
+        std::chrono::duration<double, std::milli> delta_ms(ms - work_time.count());
+        auto delta_ms_duration = std::chrono::duration_cast<std::chrono::milliseconds>(delta_ms);
+        std::this_thread::sleep_for(std::chrono::milliseconds(delta_ms_duration.count()));
+    }
+
+    b = std::chrono::system_clock::now();
+    std::chrono::duration<double, std::milli> sleep_time = b - a;
 
 
     // Start the Dear ImGui frame
@@ -167,21 +218,22 @@ static void mainloop()
 
         // Note: we are using a fixed-sized buffer for simplicity here. See ImGuiInputTextFlags_CallbackResize
         // and the code in misc/cpp/imgui_stdlib.h for how to setup InputText() for dynamically resizing strings.
-        static char text[1024 * 16] = "";
+        // static char text[1024 * 16] = "";
 
         static ImGuiInputTextFlags flags = ImGuiInputTextFlags_AllowTabInput;
         // HelpMarker("You can use the ImGuiInputTextFlags_CallbackResize facility if you need to wire InputTextMultiline() to a dynamic string type. See misc/cpp/imgui_stdlib.h for an example. (This is not demonstrated in imgui_demo.cpp because we don't want to include <string> in here)");
         // ImGui::CheckboxFlags("ImGuiInputTextFlags_ReadOnly", &flags, ImGuiInputTextFlags_ReadOnly);
         // ImGui::CheckboxFlags("ImGuiInputTextFlags_AllowTabInput", &flags, ImGuiInputTextFlags_AllowTabInput);
         // ImGui::CheckboxFlags("ImGuiInputTextFlags_CtrlEnterForNewLine", &flags, ImGuiInputTextFlags_CtrlEnterForNewLine);
-        ImGui::InputTextMultiline("##source", text, IM_ARRAYSIZE(text), ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 4), flags);
+        // ImGui::InputTextMultiline("##source", text, IM_ARRAYSIZE(text), ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 4), flags);
+        ImGui::InputTextMultiline("##source", &text, ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 4));
 
         if (ImGui::Button("Run"))// Buttons return true when clicked (most widgets return true when edited/activated)
         {
             Cycle_Instances.clear();
             counter = 0;
             std::cout << text << std::endl;
-            run_shell(text);
+            // run_shell(text);
         }
         ImGui::SameLine();
         ImGui::Checkbox("Data Forward", &DATA_FORWARD);
@@ -366,6 +418,19 @@ int main(int, char**)
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
     //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
     //IM_ASSERT(font != nullptr);
+
+    #ifdef __EMSCRIPTEN__
+
+    emscripten_browser_clipboard::paste([](std::string const &paste_data, void *callback_data [[maybe_unused]]){
+		std::cout << "Copied clipboard data: " << paste_data << std::endl;
+		clipboard_content = std::move(paste_data);
+		simulatedImguiPaste = true;
+	});
+
+    io->GetClipboardTextFn = get_clipboard_for_imgui;
+	io->SetClipboardTextFn = set_clipboard_from_imgui;
+
+    #endif
 
     // Main loop
     #ifdef __EMSCRIPTEN__

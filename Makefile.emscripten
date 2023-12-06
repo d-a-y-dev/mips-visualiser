@@ -20,7 +20,7 @@ EXE = $(WEB_DIR)/index.html
 IMGUI_DIR = ./imgui
 SOURCES = main.cpp
 SOURCES += $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp
-SOURCES += $(IMGUI_DIR)/backends/imgui_impl_sdl2.cpp $(IMGUI_DIR)/backends/imgui_impl_sdlrenderer2.cpp
+SOURCES += $(IMGUI_DIR)/backends/imgui_impl_sdl2.cpp $(IMGUI_DIR)/backends/imgui_impl_sdlrenderer2.cpp $(IMGUI_DIR)/misc/cpp/imgui_stdlib.cpp
 SOURCES += gui/design.cpp gui/components.cpp shell.cpp sim.cpp
 OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
 UNAME_S := $(shell uname -s)
@@ -34,7 +34,7 @@ EMS =
 
 # ("EMS" options gets added to both CPPFLAGS and LDFLAGS, whereas some options are for linker only)
 EMS += -s DISABLE_EXCEPTION_CATCHING=1
-LDFLAGS += -s WASM=1 -s ALLOW_MEMORY_GROWTH=1 -s NO_EXIT_RUNTIME=0 -s ASSERTIONS=1
+LDFLAGS += -s WASM=1 -s ALLOW_MEMORY_GROWTH=1 -s NO_EXIT_RUNTIME=1 -s 'EXPORTED_RUNTIME_METHODS=["ccall"]' -s ASSERTIONS=1
 
 # Uncomment next line to fix possible rendering bugs with Emscripten version older then 1.39.0 (https://github.com/ocornut/imgui/issues/2877)
 #EMS += -s BINARYEN_TRAP_MODE=clamp
@@ -57,7 +57,7 @@ endif
 ## FINAL BUILD FLAGS
 ##---------------------------------------------------------------------
 
-CPPFLAGS += -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends -Igui -sUSE_SDL=2 -sUSE_SDL_TTF=2
+CPPFLAGS += -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends -I$(IMGUI_DIR)/misc/cpp -Igui -sUSE_SDL=2 -sUSE_SDL_TTF=2
 #CPPFLAGS += -g
 CPPFLAGS += -Wall -Wformat -Os $(EMS)
 LDFLAGS += --shell-file $(IMGUI_DIR)/libs/emscripten/shell_minimal.html
@@ -74,6 +74,9 @@ LDFLAGS += $(EMS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
 
 %.o:$(IMGUI_DIR)/%.cpp
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
+
+%.o:$(IMGUI_DIR)/misc/cpp/%.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
 
 %.o:$(IMGUI_DIR)/backends/%.cpp

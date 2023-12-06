@@ -18,7 +18,7 @@ EXE = example_sdl2_sdlrenderer2
 IMGUI_DIR = ./imgui
 SOURCES = main.cpp
 SOURCES += $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp
-SOURCES += $(IMGUI_DIR)/backends/imgui_impl_sdl2.cpp $(IMGUI_DIR)/backends/imgui_impl_sdlrenderer2.cpp
+SOURCES += $(IMGUI_DIR)/backends/imgui_impl_sdl2.cpp $(IMGUI_DIR)/backends/imgui_impl_sdlrenderer2.cpp $(IMGUI_DIR)/misc/cpp/imgui_stdlib.cpp
 SOURCES += gui/design.cpp gui/components.cpp shell.cpp sim.cpp
 OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
 UNAME_S := $(shell uname -s)
@@ -45,7 +45,7 @@ ifeq ($(UNAME_S), Darwin) #APPLE
 	LIBS += -L/usr/local/lib -L/opt/local/lib
 
 	CXXFLAGS += `sdl2-config --cflags`
-	CXXFLAGS += -I/usr/local/include -I/opt/local/include -I$(IMGUI_DIR)/../SDL2/include -Igui -L$(IMGUI_DIR)/../SDL2_ttf/lib -l SDL2_ttf-2.0.0 -L$(IMGUI_DIR)/../SDL2_image/lib -l SDL2_image-2.0.0
+	CXXFLAGS += -I/usr/local/include -I/opt/local/include -I$(IMGUI_DIR)/misc/cpp -I$(IMGUI_DIR)/../SDL2/include -Igui -L$(IMGUI_DIR)/../SDL2_ttf/lib -l SDL2_ttf-2.0.0 -L$(IMGUI_DIR)/../SDL2_image/lib -l SDL2_image-2.0.0
 	CFLAGS = $(CXXFLAGS)
 endif
 
@@ -70,8 +70,8 @@ endif
 %.o:gui/%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-# %.o:$(IMGUI_DIR)/misc/cpp/%.cpp
-# 	$(CXX) $(CXXFLAGS) -c -o $@ $<
+%.o:$(IMGUI_DIR)/misc/cpp/%.cpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 %.o:$(IMGUI_DIR)/backends/%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
