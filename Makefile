@@ -23,7 +23,7 @@ SOURCES += gui/design.cpp gui/components.cpp shell.cpp sim.cpp
 OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
 UNAME_S := $(shell uname -s)
 
-CXXFLAGS = -std=c++2a -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends -Igui #-I$(IMGUI_DIR)/misc/cpp
+CXXFLAGS = -std=c++2a -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends -Igui -I$(IMGUI_DIR)/misc/cpp
 CXXFLAGS += -g -Wall -Wformat
 LIBS =
 
