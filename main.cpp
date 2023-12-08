@@ -233,7 +233,7 @@ static void mainloop()
             Cycle_Instances.clear();
             counter = 0;
             std::cout << text << std::endl;
-            // run_shell(text);
+            run_shell(text);
         }
         ImGui::SameLine();
         ImGui::Checkbox("Data Forward", &DATA_FORWARD);
