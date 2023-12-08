@@ -24,6 +24,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include "dram.h"
 
 /***************************************************************/
 /* Main memory.                                                */
@@ -446,6 +447,7 @@ void  initialize(std::string program_filename)
   int i;
 
   init_memory();
+  init_dram(8, 8, 1024, 1024);
   // for ( i = 0; i < num_prog_files; i++ ) {
   load_program(program_filename);
     // while(*program_filename++ != '\0');

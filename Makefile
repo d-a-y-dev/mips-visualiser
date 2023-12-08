@@ -16,14 +16,14 @@
 
 EXE = example_sdl2_sdlrenderer2
 IMGUI_DIR = ./imgui
-SOURCES = main.cpp
+SOURCES = main.cpp 
 SOURCES += $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp
 SOURCES += $(IMGUI_DIR)/backends/imgui_impl_sdl2.cpp $(IMGUI_DIR)/backends/imgui_impl_sdlrenderer2.cpp $(IMGUI_DIR)/misc/cpp/imgui_stdlib.cpp
-SOURCES += gui/design.cpp gui/components.cpp shell.cpp sim.cpp
+SOURCES += gui/design.cpp gui/components.cpp shell.cpp sim.cpp dram.cpp
 OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
 UNAME_S := $(shell uname -s)
 
-CXXFLAGS = -std=c++2a -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends -Igui #-I$(IMGUI_DIR)/misc/cpp
+CXXFLAGS = -std=c++2a -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends -Igui -I$(IMGUI_DIR)/misc/cpp
 CXXFLAGS += -g -Wall -Wformat
 LIBS =
 

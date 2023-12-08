@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "shell.hpp"
 #include <vector>
+#include "dram.h"
 // #include "pipeline.h"
 
 //////////////////////////////
@@ -830,13 +831,13 @@ void memory()
         switch(EXMEM_REG.OP)
         {
             case SB:
-                mem_write_32(EXMEM_REG.EXTENDEDIMM + EXMEM_REG.RSDATA, get_bits_between(EXMEM_REG.RTDATA,0 ,8));
+                write_dram(EXMEM_REG.EXTENDEDIMM + EXMEM_REG.RSDATA, get_bits_between(EXMEM_REG.RTDATA,0 ,8));
                 break;
             case SH:
-                mem_write_32(EXMEM_REG.EXTENDEDIMM + EXMEM_REG.RSDATA, get_bits_between(EXMEM_REG.RTDATA, 0, 16));
+                write_dram(EXMEM_REG.EXTENDEDIMM + EXMEM_REG.RSDATA, get_bits_between(EXMEM_REG.RTDATA, 0, 16));
                 break;
             case SW:
-                mem_write_32(EXMEM_REG.EXTENDEDIMM + EXMEM_REG.RSDATA, EXMEM_REG.RTDATA);
+                write_dram(EXMEM_REG.EXTENDEDIMM + EXMEM_REG.RSDATA, EXMEM_REG.RTDATA);
                 break;
         }
     }
@@ -845,23 +846,23 @@ void memory()
         switch(EXMEM_REG.OP)
         {
             case LBU:
-                {u32 virtualAddress = mem_read_32(EXMEM_REG.EXTENDEDIMM + EXMEM_REG.RSDATA);
+                {u32 virtualAddress = read_dram(EXMEM_REG.EXTENDEDIMM + EXMEM_REG.RSDATA);
                 EXMEM_REG.ALURESULT = get_bits_between(virtualAddress, 0, 8);}
                 break;
             case LHU:
-                {u32 virtualAddress = mem_read_32(EXMEM_REG.EXTENDEDIMM + EXMEM_REG.RSDATA);
+                {u32 virtualAddress = read_dram(EXMEM_REG.EXTENDEDIMM + EXMEM_REG.RSDATA);
                 EXMEM_REG.ALURESULT = get_bits_between(virtualAddress, 0, 16);}
                 break;
             case LH:
-                {u32 virtualAddress = mem_read_32(EXMEM_REG.EXTENDEDIMM + EXMEM_REG.RSDATA);
+                {u32 virtualAddress = read_dram(EXMEM_REG.EXTENDEDIMM + EXMEM_REG.RSDATA);
                 EXMEM_REG.ALURESULT = convert_to_32(get_bits_between(virtualAddress, 0, 16), 16);}
                 break;
             case LB:
-                {u32 virtualAddress = mem_read_32(EXMEM_REG.EXTENDEDIMM + EXMEM_REG.RSDATA);
+                {u32 virtualAddress = read_dram(EXMEM_REG.EXTENDEDIMM + EXMEM_REG.RSDATA);
                 EXMEM_REG.ALURESULT = convert_to_32(get_bits_between(virtualAddress, 0, 8), 8);}
                 break;
             case LW:
-                EXMEM_REG.ALURESULT = mem_read_32(EXMEM_REG.EXTENDEDIMM + EXMEM_REG.RSDATA);
+                EXMEM_REG.ALURESULT = read_dram(EXMEM_REG.EXTENDEDIMM + EXMEM_REG.RSDATA);
                 break;
         }
 

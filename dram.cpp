@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
-#include "shell.h"
+#include "shell.hpp"
 #include "dram.h"
 #include <vector>
 #include <iostream>
