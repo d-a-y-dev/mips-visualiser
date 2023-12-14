@@ -1,5 +1,27 @@
+# 5-Stage pipeline visualiser
+source code could be found [here](https://github.com/d-a-y-dev/mips-visualiser)
 
-# How to Build
+demo [here](https://d-a-y-dev.github.io/mips-visualiser/)
+## Caveats
+- Not all instructions are supported yet (Wrong visualisation)
+    - Branching
+    - Load/Store
+- Does not have data forwarding lines yet
+
+## Instructions
+Clicking "run" (without anything in the box) will run the default instructions, then you could see the dataflow for each instructions.
+![image](https://github.com/d-a-y-dev/d-a-y-dev.github.io/assets/88727759/35fbd437-84cc-4a74-bdac-dc0cdb0bbca8)
+
+Dataforwarding could be enabled/disabled via the "Data Forward" checkbox, (after that click 'run', you need to rerun the sim)
+![image](https://github.com/d-a-y-dev/d-a-y-dev.github.io/assets/88727759/6e05af46-5219-4686-a211-7e644ac1b9de)
+
+Click on the arrows to move forward/backward 1 cycle                
+![image](https://github.com/d-a-y-dev/d-a-y-dev.github.io/assets/88727759/9f3a9c84-96ee-445c-bb3a-26a19eedd9c5)
+
+To put in your own instructions, compiled the instructions then put in the hex'd instruction into the box (as a single line) then click 'run'.           
+![image](https://github.com/d-a-y-dev/d-a-y-dev.github.io/assets/88727759/52a6c175-a150-44b3-8e05-6e84b31bf840)
+
+## How to Build locally
 
 - On Windows with Visual Studio's CLI
 
